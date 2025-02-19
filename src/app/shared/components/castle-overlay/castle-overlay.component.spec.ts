@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CastleOverlayComponent } from './castle-overlay.component';
+import { CityDialogComponent } from './city-dialog.component';
 
-describe('CastleOverlayComponent', () => {
-  let component: CastleOverlayComponent;
-  let fixture: ComponentFixture<CastleOverlayComponent>;
+describe('CityDialogComponent', () => {
+  let component: CityDialogComponent;
+  let fixture: ComponentFixture<CityDialogComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CastleOverlayComponent]
+      imports: [CityDialogComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(CastleOverlayComponent);
+    fixture = TestBed.createComponent(CityDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
