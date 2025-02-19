@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import * as mapboxgl from 'mapbox-gl';
-import { ToolboxComponent } from '../toolbox/toolbox.component';
+import { ToolboxComponent } from '../shared/components/toolbox/toolbox.component';
 import { MatDialog } from '@angular/material/dialog';
-import { CityDialogComponent } from '../city-dialog/city-dialog.component';
+import { CityDialogComponent } from '../shared/components/city-dialog/city-dialog.component';
 
 @Component({
   selector: 'app-mapbox',
