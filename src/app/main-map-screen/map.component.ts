@@ -3,6 +3,9 @@ import * as mapboxgl from 'mapbox-gl';
 import { ToolboxComponent } from '../toolbox/toolbox.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CityDialogComponent } from '../city-dialog/city-dialog.component';
+import { CastlePopupComponent } from '../castle-popup/castle-popup.component';
+
+type GeoJsonFeature = GeoJSON.Feature<GeoJSON.Point, { id: string; name: string; description: string }>;
 
 @Component({
   selector: 'app-mapbox',
@@ -14,6 +17,12 @@ import { CityDialogComponent } from '../city-dialog/city-dialog.component';
 export class MapBoxComponent implements OnInit {
   map!: mapboxgl.Map;
   selectedElement: string | null = null;
+
+  // Fuente GeoJSON para almacenar todos los castillos
+  castlesGeoJson: GeoJSON.FeatureCollection<GeoJSON.Point, { id: string; name: string; description: string }> = {
+    type: 'FeatureCollection',
+    features: [],
+  };
 
   constructor(private dialog: MatDialog) {}
 
@@ -40,13 +49,49 @@ export class MapBoxComponent implements OnInit {
     this.map.on('load', () => {
       this.registerCastleIcon();
       this.loadCustomMap();
+
+      // Crear una fuente y capa inicial para los castillos
+      this.map.addSource('castles', {
+        type: 'geojson',
+        data: this.castlesGeoJson,
+      });
+
+      this.map.addLayer({
+        id: 'castles-layer',
+        type: 'symbol',
+        source: 'castles',
+        layout: {
+          'icon-image': 'castle-icon',
+          'icon-size': 0.25,
+        },
+      });
+
+      // Configurar clics en los castillos para mostrar el popup
+      this.map.on('click', 'castles-layer', (e: any) => {
+        console.log('Click en castillo detectado');
+
+        const feature = e.features[0];
+        const { name, description } = feature.properties;
+
+        // Abrir un dialog de Angular Material con el componente `CastlePopupComponent`
+        this.dialog.open(CastlePopupComponent, {
+          width: '300px',
+          data: { name, description },
+          panelClass: 'custom-dialog-container', // Para aplicar estilos específicos
+          hasBackdrop: false, // Sin fondo oscuro, para que no cubra el mapa
+          position: {
+            top: `${e.point.y}px`,
+            left: `${e.point.x}px`,
+          },
+        });
+      });
+
     });
 
     this.map.on('click', (event) => {
       if (this.selectedElement === 'castle') {
         this.addCastle(event.lngLat);
         this.selectedElement = null;
-        document.body.style.cursor = 'auto';
         const floatingImage = document.getElementById('floating-castle');
         if (floatingImage) {
           floatingImage.remove();
@@ -73,7 +118,6 @@ export class MapBoxComponent implements OnInit {
 
   handleElementSelection(element: string): void {
     this.selectedElement = element;
-
     document.body.style.cursor = 'url(assets/castle-icon.svg), auto';
 
     const floatingImage = document.createElement('img');
@@ -98,45 +142,35 @@ export class MapBoxComponent implements OnInit {
   }
 
   addCastle(coordinates: mapboxgl.LngLat): void {
-    const layerId = `castle-${Date.now()}`;
-    this.map.addLayer({
-      id: layerId,
-      type: 'symbol',
-      source: {
-        type: 'geojson',
-        data: {
-          type: 'FeatureCollection',
-          features: [
-            {
-              type: 'Feature',
-              geometry: {
-                type: 'Point',
-                coordinates: [coordinates.lng, coordinates.lat],
-              },
-              properties: {},
-            },
-          ],
-        },
-      },
-      layout: {
-        'icon-image': 'castle-icon',
-        'icon-size': 0.3,
-      },
-    });
-
-    // Abrir el diálogo para recoger datos
+    const castleId = `castle-${Date.now()}`;
     const dialogRef = this.dialog.open(CityDialogComponent, {
       width: '400px',
       data: {},
+      disableClose: true,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (!result) {
-        this.map.removeLayer(layerId);
-        this.map.removeSource(layerId);
-      } else {
-        console.log('Datos de la ciudad guardados:', result);
+        return;
       }
+
+      const newFeature: GeoJsonFeature = {
+        type: 'Feature',
+        geometry: {
+          type: 'Point',
+          coordinates: [coordinates.lng, coordinates.lat],
+        },
+        properties: {
+          id: castleId,
+          name: result.name,
+          description: result.description,
+        },
+      };
+
+      this.castlesGeoJson.features.push(newFeature);
+
+      const source = this.map.getSource('castles') as mapboxgl.GeoJSONSource;
+      source.setData(this.castlesGeoJson);
     });
   }
 

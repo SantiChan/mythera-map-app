@@ -1,3 +1,17 @@
-.full-width {
-  width: 100%;
+.custom-dialog-container {
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  border-radius: 8px;
+  background: none;
+  box-shadow: none;
+  transform: translate(-50%, -100%);
+  pointer-events: auto;
+}
+
+.popup-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  width: 250px;
 }
