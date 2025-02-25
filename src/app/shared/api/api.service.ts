@@ -29,7 +29,7 @@ export interface ApiServiceInterface {
 @Injectable({ providedIn: 'root' })
 export class ApiService implements ApiServiceInterface {
 
-  private api = `${environment.apiUrl}/`;
+  private api = `${environment.apiUrl}`;
 
   public constructor(public http: HttpClient) { }
 
