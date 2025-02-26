@@ -115,7 +115,7 @@ export class MapBoxComponent implements OnInit, AfterViewInit {
     this.map.on('load', () => {
       this.map.addSource('mapBackground', {
         type: 'image',
-        url: 'assets/imgs/mytheraMap.png',
+        url: 'assets/imgs/map/mythera-map.png',
         coordinates: [
           [-180, 85],  
           [180, 85],   

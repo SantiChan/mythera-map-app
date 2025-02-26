@@ -1,8 +1,8 @@
 /* Asegura que el contenedor ocupe el 100% de la pantalla */
 #map {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: -5px;
+  bottom: -10px;
   width: 100%;
 }
 
