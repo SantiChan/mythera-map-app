@@ -1,0 +1,32 @@
+<mat-dialog-content class="dialog-content">
+  <h2 class="dialog-title">Seleccionar tamaño para {{ data.category }}:</h2>
+
+  <mat-button-toggle-group
+    [(ngModel)]="selectedSize"
+    name="sizeGroup"
+    aria-label="Tamaño del marcador"
+  >
+    <mat-button-toggle value="pequeno">Pequeño</mat-button-toggle>
+    <mat-button-toggle value="mediano">Mediano</mat-button-toggle>
+    <mat-button-toggle value="grande">Grande</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  <div class="icons-container">
+    <h3 class="icons-title">Seleccionar imagen:</h3>
+    <div class="icons-grid">
+      <button
+        mat-button
+        *ngFor="let icon of icons"
+        [class.selected]="selectedIcon === icon"
+        (click)="selectedIcon = icon"
+      >
+        <img [src]="icon" [alt]="icon" />
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancelar</button>
+  <button mat-raised-button color="primary" (click)="onConfirm()">Confirmar</button>
+</mat-dialog-actions>

@@ -26,3 +26,29 @@
 .toolbox .miniature:hover {
   transform: scale(1.1);
 }
+
+.title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: auto;
+}
+
+.toolbox-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  gap: 10px;
+}
+.custom-dialog-container {
+  width: 300px;
+  height: 300px;
+}
+

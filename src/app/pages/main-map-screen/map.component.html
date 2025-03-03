@@ -1,2 +1,5 @@
-<div id="map"></div>
-<!-- <app-toolbox (elementSelected)="handleElementSelection($event)"></app-toolbox> -->
+<div id="map-container">
+  <!-- Escuchar el evento (placementSelected) y llamar a handlePlacementSelected($event) -->
+  <app-toolbox (placementSelected)="handlePlacementSelected($event)" class="toolbox"></app-toolbox>
+  <div id="map"></div>
+</div>
