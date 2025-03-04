@@ -52,14 +52,11 @@ export class CityDialogComponent {
   }
 
   onSave() {
-
-    console.log("asdas", this.placeForm, this.selectedFile)
     if (this.placeForm.invalid || !this.selectedFile) {
       console.error('Error en el formulario:');
       return; 
     }
 
-    // Crear objeto con los datos del formulario
     const placeData: CreatePlacesDTO = {
       name: this.placeForm.value.name,
       description: this.placeForm.value.description,
@@ -70,7 +67,6 @@ export class CityDialogComponent {
 
     this._placeService.createPlace(placeData).subscribe({
       next: (response) => {
-        console.log('Lugar guardado:', response);
         this.dialogRef.close(response);
       },
       error: (error) => {

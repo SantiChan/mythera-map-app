@@ -4,4 +4,10 @@ export interface CreatePlacesDTO {
     latitude: number;
     longitude: number;
     file?: File;
+    icon?: PlaceIconDTO;
+}
+
+export interface PlaceIconDTO {
+    size: string;
+    name: string;
 }

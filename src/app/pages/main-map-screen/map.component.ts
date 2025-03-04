@@ -4,13 +4,15 @@ import { MatDialog } from '@angular/material/dialog';
 import { CityDialogComponent } from '../../shared/components/city-dialog/city-dialog.component';
 import { CastlePopupComponent } from '../../shared/components/castle-popup/castle-popup.component';
 import  mapboxgl from '../../shared/mapbox/mapbox-init';
+import { RouterModule } from '@angular/router';
 
 type GeoJsonFeature = GeoJSON.Feature<GeoJSON.Point, { id: string; name: string; description: string }>;
 
 @Component({
   selector: 'app-mapbox',
   standalone: true,
-  imports: [],
+  imports: [
+  ],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })

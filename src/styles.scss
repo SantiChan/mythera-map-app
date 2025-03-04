@@ -1,7 +1,12 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
 
+* {
+    box-sizing: border-box;
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
 
 // .mapboxgl-popup {
 //   z-index: 9999; /* Asegúrate de que el popup esté sobre otros elementos */
