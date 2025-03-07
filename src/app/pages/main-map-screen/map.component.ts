@@ -35,11 +35,14 @@ export class MapBoxComponent implements OnInit, AfterViewInit {
         layers: [],
       },
       center: [0, 0],
-      zoom: 1,
+      zoom: 0.1,
       maxZoom: 10,
       renderWorldCopies: false
     });
   }
+
+
+
   ngAfterViewInit(): void {
     this.map.on('load', () => {
       this.map.addSource('mapBackground', {
@@ -56,7 +59,7 @@ export class MapBoxComponent implements OnInit, AfterViewInit {
       this.map.addLayer({
         id: 'mapBackgroundLayer',
         source: 'mapBackground',
-        type: 'raster',
+        type: 'raster', 
         paint: {
           'raster-opacity': 1
         }
@@ -66,7 +69,16 @@ export class MapBoxComponent implements OnInit, AfterViewInit {
         [-180, -85],
         [180, 85]
       ], { padding: 0 });
+      
+      this.map.setMaxBounds([
+        [-180, -85],  // Límite suroeste
+        [180, 85]     // Límite noreste
+      ]);
+
+      //this.map.scrollZoom.disable();
+
     });
+
 
     //TODO: Revisar evento
     this.map.on('click', (event) => {
