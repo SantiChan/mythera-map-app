@@ -1,27 +1,17 @@
-/* Asegura que el contenedor ocupe el 100% de la pantalla */
 #map {
-  position: absolute;
-  top: -5px;
-  bottom: -10px;
   width: 100%;
 }
 
-
-body, html {
+#map-container {
+  position: relative;
   width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
+  height: 100vh;
 }
 
-app-toolbox {
+.toolbox {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1; 
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  top: 20px;
+  left: 20px;
+  z-index: 10;
 }
+

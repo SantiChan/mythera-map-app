@@ -1,11 +1,14 @@
-<div class="toolbox">
-  <h3>Herramientas</h3>
-  <img
-    src="assets/imgs/castle-icon.svg"
-    height="50"
-    width="50"
-    alt="Castillo"
-    class="toolbox-icon"
-    (click)="selectCastle()"
-  />
-</div>
+<button [matMenuTriggerFor]="menu" mat-mini-fab aria-label="Example icon button with a menu icon">
+  <mat-icon>menu</mat-icon>
+</button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="openSizeDialog('Lugares')">
+      <mat-icon>house</mat-icon>
+      <span>Lugares</span>
+    </button>
+    <button mat-menu-item (click)="openSizeDialog('Geografía')">
+      <mat-icon>map</mat-icon>
+      <span>Geografia</span>
+    </button>
+  </mat-menu>
+
