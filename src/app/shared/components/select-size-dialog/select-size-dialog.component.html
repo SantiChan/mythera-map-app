@@ -1,14 +1,14 @@
 <mat-dialog-content class="dialog-content">
-  <h2 class="dialog-title">Seleccionar tamaño para {{ data.category }}:</h2>
+  <h2 class="dialog-title">Seleccionar tamaño para {{ getCategoryName(data.category) }}:</h2>
 
   <mat-button-toggle-group
     [(ngModel)]="selectedSize"
     name="sizeGroup"
     aria-label="Tamaño del marcador"
   >
-    <mat-button-toggle value="pequeno">Pequeño</mat-button-toggle>
-    <mat-button-toggle value="mediano">Mediano</mat-button-toggle>
-    <mat-button-toggle value="grande">Grande</mat-button-toggle>
+    <mat-button-toggle [value]="MarkerIconsSize.Small">Pequeño</mat-button-toggle>
+    <mat-button-toggle [value]="MarkerIconsSize.Medium">Mediano</mat-button-toggle>
+    <mat-button-toggle [value]="MarkerIconsSize.Big">Grande</mat-button-toggle>
   </mat-button-toggle-group>
 
   <div class="icons-container">
@@ -28,5 +28,5 @@
 
 <mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancelar</button>
-  <button mat-raised-button color="primary" (click)="onConfirm()">Confirmar</button>
+  <button mat-flat-button color="primary" (click)="onConfirm()" [disabled]="selectedIcon == ''">Confirmar</button>
 </mat-dialog-actions>

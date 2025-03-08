@@ -1,4 +1,93 @@
-<div class="places-details-wrap" @enterAnimation>
-    <h1>Detalles del Lugar</h1>
-    <p>Aquí van los detalles del lugar seleccionado...</p>
-  </div>
+<div class="places-details-wrap timeline-container" @enterAnimation>
+    <div class="header">Nombre del Asentamiento</div>
+    <div class="container">
+        <div class="section grey information">
+            <div class="grid title">
+                <h2>Descripción</h2>
+                <p class="description">Descripcion del territorio asjñhda djhashd akljshd asjlh dalsjh daljsh daljkshd ajslhd aljkshd aljshd aljshd aljshd asl</p>
+            </div>
+
+            <div class="grid details">
+                <div class="card"><span class="strong">Nombre:</span> Octaris </div>
+                <div class="card"><span class="strong">Ubicación:</span> Costa del Desierto de Cobre (Cuerno de Avarna), bañado por Mareas Negras. </div>
+                <div class="card"><span class="strong">Tipo de Asentamiento:</span> Metrópoli </div>
+                <div class="card"><span class="strong">Tipo de Gobierno:</span> Oligarquía mercantil </div>
+                <div class="card"><span class="strong">Estructura de Gobierno:</span> Consejo (Rostro de la Fortuna).</div>
+                <div class="card"><span class="strong">Regente Actual:</span> Rey Aldric III</div>
+                <div class="card"><span class="strong">Título del Regente:</span> Soberano de Eldoria</div>
+                <div class="card"><span class="strong">Duración del Mandato:</span> 25 años</div>
+            </div>
+        </div>
+
+        <div class="section blue">
+            <div class="grid title">
+                <h2>Economía</h2>
+                <p class="description">Descripcion del territorio asjñhda djhashd akljshd asjlh dalsjh daljsh daljkshd ajslhd aljkshd aljshd aljshd aljshd asl</p>
+            </div>
+            <div class="grid details">
+                <div class="card"><span class="strong">Principales productos y recursos:</span> Especias, sedas, piedras preciosas, esclavos y artefactos exóticos.</div>
+                <div class="card"><span class="strong">Rutas comerciales:</span> Rutas marítimas en Mareas Negras, rutas terrestres en el Desierto de Cobre.</div>
+                <div class="card"><span class="strong">Asentamientos aliados:</span> Kher-semet</div>
+                <div class="card"><span class="strong">Acuerdos Comerciales:</span> Esclavos (Kher - Semet), Especias y sedas (Velamar), Artefactos exóticos (Islas Meñique), Piedras preciosas (Kurfer).</div>
+            </div>
+        </div>
+        
+        <div class="section grey">
+            <div class="grid title">
+                <h2>Sociedad y Cultura</h2>
+                <p class="description">Descripcion del territorio asjñhda djhashd akljshd asjlh dalsjh daljsh daljkshd ajslhd aljkshd aljshd aljshd aljshd asl</p>
+            </div>
+            <div class="grid details society">
+                <div class="card"><span class="strong">Raza principal:</span> Oro, Madera, Especias</div>
+                <div class="card"><span class="strong">Religión y creencias:</span> Mar del Norte</div>
+                <div class="card"><span class="strong">Fiestas y Celebraciones:</span> Orfebres y Mercaderes del Este</div>
+            </div>
+        </div>
+
+        <div class="section purple">
+            <div class="grid title">
+                <h2>Relaciones Diplomaticas</h2>
+                <p class="description">Descripcion del territorio asjñhda djhashd akljshd asjlh dalsjh daljsh daljkshd ajslhd aljkshd aljshd aljshd aljshd asl</p>
+            </div>
+            <div class="grid details relations">
+                <div class="card"><span class="strong">Asentamientos Aliados:</span> Kher - Semet.</div>
+                <div class="card"><span class="strong">Asentamientos Neutrales:</span> Kurfer</div>
+                <div class="card"><span class="strong">Asentamientos Enemigos:</span> Desconfianza hacia las culturas nómadas del Desierto de Cobre (Nidos negros, entre otros). </div>
+            </div>
+        </div>
+
+        <div class="section grey pnj">
+            <div class="flip-card" [class.flipped]="isFlipped" (click)="toggleFlip()">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <img src="assets/pnjs/testing-pnj.webp" alt="Sir Hans Capon">
+                        <span class="name">Sir Hans Capon</span>
+                    </div>
+                    <div class="flip-card-back">
+                        <p>A nobleman with a sharp wit and a penchant for adventure. He enjoys luxury but also seeks to prove himself.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section red">
+            <div class="grid title">
+                <h2>Fuerzas Militares</h2>
+                <p class="description">Descripcion del territorio asjñhda djhashd akljshd asjlh dalsjh daljsh daljkshd ajslhd aljkshd aljshd aljshd aljshd asl</p>
+            </div>
+            <div class="grid details">
+                <div class="card"><span class="strong">Ejército(Peanas):</span> 8 </div>
+                <div class="card"><span class="strong">Comandante:</span> General Darius Raven</div>
+                <div class="card"><span class="strong">Fortalezas:</span> Murallas de Eldoria</div>
+            </div>
+        </div>
+
+
+        <div class="section brown">
+            <div class="grid history">
+                <h2>Historia</h2>
+                <p class="description">Descripcion del territorio asjñhda djhashd akljshd asjlh dalsjh daljsh daljkshd ajslhd aljkshd aljshd aljshd aljshd asl</p>
+            </div>
+        </div>
+    </div>
+</div>

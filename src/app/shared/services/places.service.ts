@@ -23,6 +23,8 @@ export class PlaceService {
         formData.append('description', placeData.description);
         formData.append('latitude', placeData.latitude.toString());
         formData.append('longitude', placeData.longitude.toString());
+        formData.append('iconName', placeData.icon.name);
+        formData.append('iconSize', placeData.icon.size.toString());
     
         if (placeData.file) {
           formData.append('file', placeData.file);

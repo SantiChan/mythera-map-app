@@ -20,5 +20,9 @@ import { Component } from '@angular/core';
   ]
 })
 export class PlacesDetailsComponent {
+  isFlipped = false;
 
+  toggleFlip() {
+    this.isFlipped = !this.isFlipped;
+  }
 }

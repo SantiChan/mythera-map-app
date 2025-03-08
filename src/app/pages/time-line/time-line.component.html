@@ -1,0 +1,11 @@
+<div class="timeline-container">
+    <div class="timeline">
+        <div *ngFor="let event of timelineEvents; let i = index" #timelineItem class="timeline-item" [class.visible]="event.visible">
+            <div class="timeline-content">
+                <h2 *ngIf="event.isAge">{{ event.title }}</h2>
+                <h3 *ngIf="!event.isAge">{{ event.title }}</h3>
+                <p>{{ event.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>

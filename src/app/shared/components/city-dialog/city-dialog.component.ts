@@ -5,8 +5,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PlaceService } from '../../services/places.service';
-import { CreatePlacesDTO } from '../../interfaces/places/places.interface';
+import { CreatePlacesDTO, SavePlaceMarket } from '../../interfaces/places/places.interface';
 import { CommonModule } from '@angular/common';
+import { MarkerService } from '../../services/marker.service';
 
 @Component({
   selector: 'app-city-dialog',
@@ -30,6 +31,7 @@ export class CityDialogComponent {
   constructor(
     private _fb: FormBuilder,
     private _placeService: PlaceService,
+    private _markerService: MarkerService,
     public dialogRef: MatDialogRef<CityDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any 
   ) {
@@ -61,19 +63,27 @@ export class CityDialogComponent {
       name: this.placeForm.value.name,
       description: this.placeForm.value.description,
       latitude: this.data.lat, 
-      longitude: this.data.lng, 
+      longitude: this.data.lng,
+      icon: {
+        name: this.data.icon.name,
+        size: this.data.icon.size
+      },
       file: this.selectedFile,
     };
 
     this._placeService.createPlace(placeData).subscribe({
       next: (response) => {
+        const marker: SavePlaceMarket = {
+          marker: this.data.marker,
+          lat: this.data.lat,
+          lng: this.data.lng          
+        };
+
+        this._markerService.setSaveMarker(marker);
         this.dialogRef.close(response);
       },
       error: (error) => {
         console.error('Error al guardar el lugar', error);
-      },
-      complete: () => {
-        console.log('Solicitud completada');
       }
     });
   }

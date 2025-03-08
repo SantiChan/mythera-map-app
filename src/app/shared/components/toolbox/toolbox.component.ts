@@ -5,6 +5,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectSizeDialogComponent } from '../select-size-dialog/select-size-dialog.component';
+import { MarkerIconInterface } from '../../interfaces/icons/marker-icon.interface';
+import { MarkerIconsPlace } from '../../enums/icons/marker-icons.enum';
 
 @Component({
   selector: 'app-toolbox',
@@ -14,12 +16,11 @@ import { SelectSizeDialogComponent } from '../select-size-dialog/select-size-dia
   imports: [MatButtonModule, MatMenuModule, MatIconModule, MatToolbarModule],
 })
 export class ToolboxComponent {
-  @Output() placementSelected = new EventEmitter<{ size: string; icon: string }>();
+  @Output() placementSelected = new EventEmitter<MarkerIconInterface>();
 
   constructor(private dialog: MatDialog) {}
 
-  // Método para seleccionar tamaño de imagen( llamamos a SelectSizeDialogComponent)
-  openSizeDialog(category: string): void {
+  openSizeDialog(category: MarkerIconsPlace): void {
     const dialogRef = this.dialog.open(SelectSizeDialogComponent, {
       data: { category },
       width: '1500px',
@@ -28,8 +29,6 @@ export class ToolboxComponent {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        // result contiene { size, icon }
-        // Emitir el evento para que el MapBoxComponent lo reciba
         this.placementSelected.emit(result);
       }
     });
