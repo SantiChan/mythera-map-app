@@ -17,6 +17,7 @@ import { MarkerIconsPlace } from '../../enums/icons/marker-icons.enum';
 })
 export class ToolboxComponent {
   @Output() placementSelected = new EventEmitter<MarkerIconInterface>();
+  markerIconsPlace = MarkerIconsPlace; // expose enum to template
 
   constructor(private dialog: MatDialog) {}
 

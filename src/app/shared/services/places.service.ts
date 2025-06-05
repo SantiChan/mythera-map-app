@@ -11,12 +11,6 @@ export class PlaceService {
         private _apiService: ApiService
     ) {}
 
-    createPlace(newPlaceRequest: CreatePlacesDTO): Observable<any> {
-        const formData = this._convertFDCreatePlaceDTO(newPlaceRequest);
-
-        return this._apiService.post(API_CALLS.place, formData);
-    }
-
     private _convertFDCreatePlaceDTO(placeData: CreatePlacesDTO): FormData {
         const formData = new FormData();
         formData.append('name', placeData.name);
@@ -31,5 +25,16 @@ export class PlaceService {
         }
     
         return formData;
+    }
+
+    createPlace(newPlaceRequest: CreatePlacesDTO): Observable<any> {
+        const formData = this._convertFDCreatePlaceDTO(newPlaceRequest);
+
+        return this._apiService.post(API_CALLS.place, formData);
+    }
+
+    getPlaces(): Observable<any> {
+        return this._apiService.get(API_CALLS.place);
+
     }
 }

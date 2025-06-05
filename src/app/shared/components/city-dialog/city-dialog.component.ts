@@ -8,6 +8,7 @@ import { PlaceService } from '../../services/places.service';
 import { CreatePlacesDTO, SavePlaceMarket } from '../../interfaces/places/places.interface';
 import { CommonModule } from '@angular/common';
 import { MarkerService } from '../../services/marker.service';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-city-dialog',
@@ -20,6 +21,7 @@ import { MarkerService } from '../../services/marker.service';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
+    RouterModule
   ],
   providers: [PlaceService]
 })
@@ -33,12 +35,17 @@ export class CityDialogComponent {
     private _placeService: PlaceService,
     private _markerService: MarkerService,
     public dialogRef: MatDialogRef<CityDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any 
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private _router: Router
+
   ) {
     this.placeForm = this._fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required]
     });
+    if (this.data && this.data.placeData && this.data.viewMode) {
+      this.imagePreview = this.data.placeData.imageUrl;
+    }
   }
 
   onFileSelected(event: any) {
@@ -74,9 +81,11 @@ export class CityDialogComponent {
     this._placeService.createPlace(placeData).subscribe({
       next: (response) => {
         const marker: SavePlaceMarket = {
-          marker: this.data.marker,
-          lat: this.data.lat,
-          lng: this.data.lng          
+          latitude: placeData.latitude,
+          longitude: placeData.longitude,
+          name: placeData.name,
+          iconName: placeData.icon.name,
+          iconSize: placeData.icon.size
         };
 
         this._markerService.setSaveMarker(marker);
@@ -90,5 +99,10 @@ export class CityDialogComponent {
 
   onCancel() {
     this.dialogRef.close(null);
+  }
+
+  goToDetails() {
+    this.dialogRef.close(); 
+    this._router.navigate(['/place-details', this.data.placeData._id]); 
   }
 }

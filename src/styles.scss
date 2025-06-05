@@ -1,8 +1,108 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
 
+@font-face {
+  font-family: 'Osgard';
+  src: url('/assets/fonts/Osgard.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Pangaia';
+  src: url('/assets/fonts/PPPangaia-Bold.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Pangaia-light';
+  src: url('/assets/fonts/PPPangaia-Ultralight.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
     box-sizing: border-box;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.custom-marker {
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    /*width: auto !important;
+    height: auto !important;*/
+}
+/*
+.custom-marker img {
+    object-fit: contain !important;
+    width: auto !important;
+    height: auto !important;
+}*/
+
+.mat-mdc-dialog-surface {
+  overflow: initial!important;
+  padding: 0 20px 20px 20px;
+}
+
+.mat-mdc-form-field-subscript-wrapper, .mat-mdc-form-field-bottom-align::before {
+  display: none;
+}
+
+.dark-theme-local {
+    .mat-mdc-form-field-subscript-wrapper {
+        display: none!important;
+    }
+
+    mat-form-field {
+        width: 100%;
+    }
+
+    .mat-form-field-appearance-fill,
+    .mdc-text-field--filled,
+    .mdc-text-field,
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+        background-color: #2b2b2b;
+        border-radius: 4px;
+    }
+
+    .mat-form-field-infix {
+        color: #f0f0f0;
+    }
+
+    .mat-form-field-label {
+        color: #ccc;
+    }
+
+
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label,
+    .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input,
+    input {
+    color: #ffffff;
+    caret-color: #ffffff;
+    background: transparent;
+    }
+
+    .mat-form-field-underline::before {
+        background-color: #555;
+    }
+
+    .mat-form-field-ripple {
+        background-color: #ffd700;
+    }
+
+    .mat-focused .mat-form-field-label {
+        color: #fff;
+    }
+}

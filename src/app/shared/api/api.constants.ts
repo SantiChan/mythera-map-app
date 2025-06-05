@@ -1,3 +1,4 @@
 export const API_CALLS = {
-    place: '/places'
+    place: '/places',
+    getPlaces: '/getPlaces'
 };

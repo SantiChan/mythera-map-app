@@ -1,30 +1,42 @@
-<h2 mat-dialog-title>Información del Lugar</h2>
 <div mat-dialog-content>
-  <form [formGroup]="placeForm" (ngSubmit)="onSave()">
-    <div *ngIf="imagePreview" class="image-preview">
-      <p>Vista previa:</p>
-      <img [src]="imagePreview" alt="Vista previa" class="preview-img" />
-    </div>
-    <input type="file" (change)="onFileSelected($event)" accept="image/*" />
-    <mat-error *ngIf="!selectedFile">Debes seleccionar una imagen.</mat-error>
+  <div *ngIf="data.viewMode; else editMode">
+    <img [src]="imagePreview" alt="Vista previa" class="preview-img" />
+    <h1>
+      {{data.placeData.name}}
+    </h1>
+    <p>
+      {{data.placeData.description}}
+    </p>
+    <a (click)="goToDetails()">Ver más</a>
+  </div>
+  <ng-template #editMode>
+    <form [formGroup]="placeForm" (ngSubmit)="onSave()">
+      <div *ngIf="imagePreview" class="image-preview">
+        <p>Vista previa:</p>
+        <img [src]="imagePreview" alt="Vista previa" class="preview-img" />
+      </div>
+      <input type="file" (change)="onFileSelected($event)" accept="image/*" class="full-width" />
+      <mat-error *ngIf="!selectedFile">Debes seleccionar una imagen.</mat-error>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Nombre del Lugar</mat-label>
-      <input matInput formControlName="name" />
-      <mat-error *ngIf="placeForm.get('name')?.invalid">El nombre es obligatorio.</mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nombre del Lugar</mat-label>
+        <input matInput formControlName="name" />
+        <mat-error *ngIf="placeForm.get('name')?.invalid">El nombre es obligatorio.</mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Descripción</mat-label>
-      <textarea matInput formControlName="description"></textarea>
-      <mat-error *ngIf="placeForm.get('description')?.invalid">La descripción es obligatoria.</mat-error>
-    </mat-form-field>
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Descripción</mat-label>
+        <textarea matInput formControlName="description"></textarea>
+        <mat-error *ngIf="placeForm.get('description')?.invalid">La descripción es obligatoria.</mat-error>
+      </mat-form-field>
 
-    <div mat-dialog-actions align="end">
-      <button mat-button type="button" (click)="onCancel()">Cancelar</button>
-      <button mat-raised-button color="primary" type="submit" >
-        Guardar
-      </button>
-    </div>
-  </form>
+      <div mat-dialog-actions align="end">
+        <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+        <button mat-raised-button color="primary" type="submit">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </ng-template>
+
 </div>

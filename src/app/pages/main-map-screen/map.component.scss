@@ -1,22 +1,21 @@
 html, body {
-  overflow: hidden;  /* Elimina el scroll de la página */
-  height: 100vh;  /* Asegura que ocupa toda la pantalla */
   margin: 0;
   padding: 0;
-}
-
-#map-container {
-  position: relative;
-  width: 100vw;
-  height: 100vh;  /* Ocupa toda la pantalla */
-  overflow: hidden;  /* Evita scroll interno */
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
 }
 
 #map {
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
+
+// Externo al mapa
 .toolbox {
   position: fixed;
   top: 20px;
@@ -29,4 +28,16 @@ html, body {
   bottom: 20px;
   left: 50%;
   z-index: 10;
+}
+
+.custom-marker {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.marker-label {
+  text-align: center;
+  font-size: 12px;
+  color: white;
+  text-shadow: 0 0 4px black;
 }

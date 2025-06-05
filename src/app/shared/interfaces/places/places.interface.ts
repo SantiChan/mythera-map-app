@@ -14,15 +14,17 @@ export interface PlaceIconDTO {
     name: string;
 }
 
-export interface PlaceMarker { 
-    lng: number; 
-    lat: number; 
-    size: MarkerIconsSize; 
+export interface PlaceMarker {
+    lng: number;
+    lat: number;
+    size: MarkerIconsSize;
     icon: string;
 }
 
 export interface SavePlaceMarket {
-    marker: HTMLImageElement,
-    lng: number; 
-    lat: number;
+    latitude: number;
+    longitude: number;
+    name: string;
+    iconName: string;
+    iconSize: string;
 }
