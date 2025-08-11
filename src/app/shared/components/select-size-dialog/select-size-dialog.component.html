@@ -11,22 +11,9 @@
     <mat-button-toggle [value]="MarkerIconsSize.Big">Grande</mat-button-toggle>
   </mat-button-toggle-group>
 
-  <div class="icons-container">
-    <h3 class="icons-title">Seleccionar imagen:</h3>
-    <div class="icons-grid">
-      <button
-        mat-button
-        *ngFor="let icon of icons"
-        [class.selected]="selectedIcon === icon"
-        (click)="selectedIcon = icon"
-      >
-        <img [src]="icon" [alt]="icon" />
-      </button>
-    </div>
-  </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
   <button mat-button (click)="onCancel()">Cancelar</button>
-  <button mat-flat-button color="primary" (click)="onConfirm()" [disabled]="selectedIcon == ''">Confirmar</button>
+  <button mat-flat-button color="primary" (click)="onConfirm()">Confirmar</button>
 </mat-dialog-actions>

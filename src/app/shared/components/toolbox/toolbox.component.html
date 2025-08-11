@@ -1,14 +1,21 @@
 <button [matMenuTriggerFor]="menu" mat-mini-fab aria-label="Example icon button with a menu icon">
   <mat-icon>menu</mat-icon>
 </button>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="openSizeDialog(markerIconsPlace.Place)">
-      <mat-icon>house</mat-icon>
-      <span>Lugares</span>
-    </button>
-    <button mat-menu-item (click)="openSizeDialog(markerIconsPlace.Geografy)">
-      <mat-icon>map</mat-icon>
-      <span>Geografia</span>
-    </button>
-  </mat-menu>
-
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="openSizeDialog(markerIconsPlace.Place)">
+    <mat-icon>place</mat-icon>
+    <span>Lugares</span>
+  </button>
+  <button mat-menu-item (click)="openSizeDialog(markerIconsPlace.City)">
+    <mat-icon>house</mat-icon>
+    <span>Ciudades</span>
+  </button>
+  <button mat-menu-item (click)="openSizeDialog(markerIconsPlace.Region)">
+    <mat-icon>explore</mat-icon>
+    <span>Regiones</span>
+  </button>
+  <button mat-menu-item (click)="openSizeDialog(markerIconsPlace.Continent)">
+    <mat-icon>public</mat-icon>
+    <span>Continentes</span>
+  </button>
+</mat-menu>

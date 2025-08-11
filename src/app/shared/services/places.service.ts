@@ -14,11 +14,11 @@ export class PlaceService {
     private _convertFDCreatePlaceDTO(placeData: CreatePlacesDTO): FormData {
         const formData = new FormData();
         formData.append('name', placeData.name);
+        formData.append('type', placeData.type);
         formData.append('description', placeData.description);
-        formData.append('latitude', placeData.latitude.toString());
-        formData.append('longitude', placeData.longitude.toString());
-        formData.append('iconName', placeData.icon.name);
-        formData.append('iconSize', placeData.icon.size.toString());
+        formData.append('x', placeData.x.toString());
+        formData.append('y', placeData.y.toString());
+        formData.append('iconSize', placeData.iconSize.toString());
     
         if (placeData.file) {
           formData.append('file', placeData.file);

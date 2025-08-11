@@ -16,22 +16,14 @@ import { MarkerIconsPlace } from '../../enums/icons/marker-icons.enum';
   imports: [MatButtonModule, MatMenuModule, MatIconModule, MatToolbarModule],
 })
 export class ToolboxComponent {
-  @Output() placementSelected = new EventEmitter<MarkerIconInterface>();
   markerIconsPlace = MarkerIconsPlace; // expose enum to template
 
   constructor(private dialog: MatDialog) {}
 
   openSizeDialog(category: MarkerIconsPlace): void {
-    const dialogRef = this.dialog.open(SelectSizeDialogComponent, {
-      data: { category },
-      width: '1500px',
-      height: '500px'
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.placementSelected.emit(result);
-      }
+    console.log("openSizeDialog", category);
+    this.dialog.open(SelectSizeDialogComponent, {
+      data: { category }
     });
   }
 }

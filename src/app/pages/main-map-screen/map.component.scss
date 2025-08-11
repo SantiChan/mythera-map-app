@@ -16,19 +16,8 @@ html, body {
 
 
 // Externo al mapa
-.toolbox {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 10;
-}
 
-.create-marker-toolbar-wrap {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  z-index: 10;
-}
+
 
 .custom-marker {
   pointer-events: auto;

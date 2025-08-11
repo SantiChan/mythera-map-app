@@ -1,6 +1,8 @@
 export enum MarkerIconsPlace {
     Place = "0",
-    Geografy = "1"
+    City = "1",
+    Region = "2",
+    Continent = "3",
 }
 
 export enum MarkerIconsSize {
@@ -11,5 +13,7 @@ export enum MarkerIconsSize {
 
 export const MarkerIconsPlaceTranslate: Record<MarkerIconsPlace, string> = {
     [MarkerIconsPlace.Place]: "Lugar",
-    [MarkerIconsPlace.Geografy]: "Geografía"
+    [MarkerIconsPlace.City]: "Ciudad",
+    [MarkerIconsPlace.Region]: "Región",
+    [MarkerIconsPlace.Continent]: "Continente"
 };

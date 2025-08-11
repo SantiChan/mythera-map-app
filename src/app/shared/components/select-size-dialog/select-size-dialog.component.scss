@@ -3,7 +3,6 @@
   flex-direction: column;
   align-items: center;
   gap: 16px;
-  padding-top: 50px;
 }
 
 .dialog-title {
@@ -36,23 +35,17 @@ mat-button-toggle-group {
       &.selected {
         background-color: #cce5ff;
       }
-      img {
-        width: 100px;
-        height: 100px;
-        object-fit: contain;
-      }
     }
   }
 }
 
 .icons-title {
-  margin-top: 50px;
   font-size: 18px;
 }
 
 mat-dialog-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
   margin-top: 16px;
+  padding: 0;
 }

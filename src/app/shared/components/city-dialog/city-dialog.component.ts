@@ -9,6 +9,7 @@ import { CreatePlacesDTO, SavePlaceMarket } from '../../interfaces/places/places
 import { CommonModule } from '@angular/common';
 import { MarkerService } from '../../services/marker.service';
 import { Router, RouterModule } from '@angular/router';
+import { PlacesTypes } from '../../enums/places/places.enums';
 
 @Component({
   selector: 'app-city-dialog',
@@ -68,24 +69,22 @@ export class CityDialogComponent {
 
     const placeData: CreatePlacesDTO = {
       name: this.placeForm.value.name,
+      type: PlacesTypes.City,
       description: this.placeForm.value.description,
-      latitude: this.data.lat, 
-      longitude: this.data.lng,
-      icon: {
-        name: this.data.icon.name,
-        size: this.data.icon.size
-      },
+      x: this.data.x, 
+      y: this.data.y,
+      iconSize: this.data.icon.size,
       file: this.selectedFile,
     };
 
     this._placeService.createPlace(placeData).subscribe({
       next: (response) => {
         const marker: SavePlaceMarket = {
-          latitude: placeData.latitude,
-          longitude: placeData.longitude,
+          type: placeData.type,
+          x: placeData.x,
+          y: placeData.y,
           name: placeData.name,
-          iconName: placeData.icon.name,
-          iconSize: placeData.icon.size
+          iconSize: placeData.iconSize
         };
 
         this._markerService.setSaveMarker(marker);

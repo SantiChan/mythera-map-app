@@ -9,6 +9,7 @@
     </p>
     <a (click)="goToDetails()">Ver más</a>
   </div>
+  
   <ng-template #editMode>
     <form [formGroup]="placeForm" (ngSubmit)="onSave()">
       <div *ngIf="imagePreview" class="image-preview">

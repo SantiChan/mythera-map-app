@@ -39,36 +39,10 @@ export class SelectSizeDialogComponent {
   ) {}
 
   ngOnInit(): void {
-    this._loadIcons();
-  }
-
-  private _loadIcons(): void {
-    switch (this.data.category) {
-      case MarkerIconsPlace.Place:
-        this.icons = [
-          'assets/icons/icons-placement/castle1.webp',
-          'assets/icons/icons-placement/castle2.png',
-          'assets/icons/icons-placement/castle3.png',
-        ];
-        break;
-      
-      case MarkerIconsPlace.Geografy:
-        this.icons = [
-          'assets/icons/icons-placement/mountain1.svg',
-          'assets/icons/icons-placement/mountain2.svg',
-          'assets/icons/icons-placement/mountain3.svg',
-        ];
-        break;
-    
-      default:
-        this.icons = [];
-        break;
-    }
   }
 
   onConfirm(): void {
     const selectedMarker: MarkerIconInterface = {
-      icon: this.selectedIcon,
       size: this.selectedSize,
     };
 

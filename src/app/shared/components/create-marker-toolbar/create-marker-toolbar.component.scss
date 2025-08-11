@@ -1,3 +1,11 @@
+:host { 
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  z-index: 10;
+}
+
+
 .create-toolbar {
     background: white;
     padding: 10px 15px;

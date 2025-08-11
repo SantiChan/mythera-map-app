@@ -174,7 +174,6 @@ export class MapBoxComponent implements OnInit, AfterViewInit {
     if (!this.selectedPlacement) return;
 
     const markerElement = document.createElement('img');
-    markerElement.src = this.selectedPlacement.icon;
 
     const size = this._resolveIconSize();
     markerElement.style.width = `${size}px`;
@@ -190,7 +189,6 @@ export class MapBoxComponent implements OnInit, AfterViewInit {
         y,
         marker: markerElement,
         icon: {
-          name: this.selectedPlacement.icon,
           size: this.selectedPlacement.size
         }
       }
@@ -221,7 +219,8 @@ export class MapBoxComponent implements OnInit, AfterViewInit {
   }
 
   onAddPlacementMode(): void {
-    this.map.getCanvas().style.cursor = `url(${this.selectedPlacement?.icon}) 25 25, auto`;
+    console.log("")
+    ///this.map.getCanvas().style.cursor = `url(${this.selectedPlacement?.icon}) 25 25, auto`;
     this.map.once('click', (event) => {
       this._placeIconOnMap(event.lngLat);
       this.map.getCanvas().style.cursor = '';

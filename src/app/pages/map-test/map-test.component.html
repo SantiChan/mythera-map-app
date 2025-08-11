@@ -1,0 +1,7 @@
+<app-toolbox class="toolbox"></app-toolbox>
+
+<div id="map"></div>
+
+<app-create-marker-toolbar *ngIf="isCreating" [selectedMarker]="selectedPlacement" (add)="onAddPlacementMode()"
+    (cancel)="onCancelPlacementMode()" class="create-marker-toolbar-wrap">
+</app-create-marker-toolbar>

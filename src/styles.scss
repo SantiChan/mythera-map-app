@@ -1,26 +1,27 @@
-@import "mapbox-gl/dist/mapbox-gl.css";
+//@import "mapbox-gl/dist/mapbox-gl.css";
 
 @font-face {
-  font-family: 'Osgard';
-  src: url('/assets/fonts/Osgard.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'Pangaia';
-  src: url('/assets/fonts/PPPangaia-Bold.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+    font-family: 'Osgard';
+    src: url('/assets/fonts/Osgard.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 @font-face {
-  font-family: 'Pangaia-light';
-  src: url('/assets/fonts/PPPangaia-Ultralight.woff2') format('woff2');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
+    font-family: 'Pangaia';
+    src: url('/assets/fonts/PPPangaia-Bold.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Pangaia-light';
+    src: url('/assets/fonts/PPPangaia-Ultralight.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
 }
 
 * {
@@ -44,25 +45,24 @@ body {
     /*width: auto !important;
     height: auto !important;*/
 }
-/*
-.custom-marker img {
-    object-fit: contain !important;
-    width: auto !important;
-    height: auto !important;
-}*/
 
-.mat-mdc-dialog-surface {
-  overflow: initial!important;
-  padding: 0 20px 20px 20px;
+.leaflet-touch .leaflet-control-attribution {
+    display: none;
 }
 
-.mat-mdc-form-field-subscript-wrapper, .mat-mdc-form-field-bottom-align::before {
-  display: none;
+.mat-mdc-dialog-surface {
+    overflow: initial !important;
+    padding: 20px;
+}
+
+.mat-mdc-form-field-subscript-wrapper,
+.mat-mdc-form-field-bottom-align::before {
+    display: none;
 }
 
 .dark-theme-local {
     .mat-mdc-form-field-subscript-wrapper {
-        display: none!important;
+        display: none !important;
     }
 
     mat-form-field {
@@ -89,9 +89,9 @@ body {
     .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label,
     .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-text-field__input,
     input {
-    color: #ffffff;
-    caret-color: #ffffff;
-    background: transparent;
+        color: #ffffff;
+        caret-color: #ffffff;
+        background: transparent;
     }
 
     .mat-form-field-underline::before {
@@ -104,5 +104,100 @@ body {
 
     .mat-focused .mat-form-field-label {
         color: #fff;
+    }
+}
+
+.mat-mdc-menu-panel {
+    border-radius: 0 !important;
+}
+
+.icon {
+    transform: scale(1) !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    pointer-events: auto;
+    user-select: none;
+
+    .inner {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+    .label {
+        font-size: 18px;
+        color: white;
+        text-shadow: 3px 3px 3px black;
+        margin-top: 4px;
+    }
+
+    &.epic .inner {
+        background-color: #1b1b1b;
+        border: 2px solid gold;
+    }
+
+    &.epic .inner::after {
+        content: '★';
+        font-size: 16px;
+        color: gold;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    &.elite .inner {
+        width: 18px;
+        height: 18px;
+        position: relative;
+        background-color: transparent;
+    }
+
+    &.elite .inner::before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        border: 1px solid gold;
+        transform: rotate(45deg);
+        box-sizing: border-box;
+    }
+
+    &.elite .inner::after {
+        content: '';
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        background-color: black;
+        border: 1px solid gold;
+        transform: rotate(45deg);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        box-sizing: border-box;
+    }
+
+    &.common .inner {
+        width: 14px;
+        height: 14px;
+        background-color: #1b1b1b;
+        border: 2px solid gold;
+    }
+
+    &.common .inner::after {
+        content: '';
+        width: 4px;
+        height: 4px;
+        background-color: gold;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
 }
