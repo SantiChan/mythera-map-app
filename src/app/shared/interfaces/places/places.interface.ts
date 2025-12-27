@@ -1,27 +1,15 @@
-import { MarkerIconsSize } from "../../enums/icons/marker-icons.enum";
-import { PlacesTypes } from "../../enums/places/places.enums";
+import { MarkerIconsPlace, MarkerIconsSize } from "../../enums/icons/marker-icons.enum";
 
-export interface CreatePlacesDTO {
+export interface Place {
+    type: MarkerIconsPlace,
+    x:number;
+    y: number;
     name: string;
-    type: PlacesTypes;
+    iconSize?: MarkerIconsSize;
+}
+
+export interface CreatePlacesDTO extends Place {
+    id?: string;
     description: string;
-    x: number;
-    y: number;
     file?: File;
-    iconSize: string;
-}
-
-export interface PlaceMarker {
-    y: number;
-    x: number;
-    size: MarkerIconsSize;
-    icon: string;
-}
-
-export interface SavePlaceMarket {
-    type: string;
-    x: number;
-    y: number;
-    name: string;
-    iconSize: string;
 }

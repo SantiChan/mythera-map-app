@@ -24,6 +24,8 @@ export interface ApiServiceInterface {
   put<T>(endPoint: string, params: Object, options?: IRequestOptions): Observable<T>;
 
   delete<T>(endPoint: string, options?: IRequestOptions): Observable<T>;
+
+  patch<T>(endPoint: string, params: Object, options?: IRequestOptions): Observable<T>; 
 }
 
 @Injectable({ providedIn: 'root' })
@@ -75,4 +77,14 @@ export class ApiService implements ApiServiceInterface {
     return this.http.delete<T>(this.api + endPoint, options);
   }
 
+  /**
+   * PATCH request
+   * @param {string} endPoint end point of the api
+   * @param {Object} params body of the request.
+   * @param {IRequestOptions} options options of the request like headers, body, etc.
+   * @returns {Observable<T>}
+   */
+  public patch<T>(endPoint: string, params: Object, options?: IRequestOptions): Observable<T> {
+    return this.http.patch<T>(this.api + endPoint, params, options);
+  }
 }

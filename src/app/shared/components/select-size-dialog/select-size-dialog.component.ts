@@ -44,6 +44,7 @@ export class SelectSizeDialogComponent {
   onConfirm(): void {
     const selectedMarker: MarkerIconInterface = {
       size: this.selectedSize,
+      type: this.data.category
     };
 
     this.markerService.setSelectedMarker(selectedMarker); 

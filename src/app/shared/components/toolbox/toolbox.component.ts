@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SelectSizeDialogComponent } from '../select-size-dialog/select-size-dialog.component';
 import { MarkerIconInterface } from '../../interfaces/icons/marker-icon.interface';
 import { MarkerIconsPlace } from '../../enums/icons/marker-icons.enum';
+import { MarkerService } from '../../services/marker.service';
 
 @Component({
   selector: 'app-toolbox',
@@ -18,12 +19,24 @@ import { MarkerIconsPlace } from '../../enums/icons/marker-icons.enum';
 export class ToolboxComponent {
   markerIconsPlace = MarkerIconsPlace; // expose enum to template
 
-  constructor(private dialog: MatDialog) {}
+  constructor(
+    private dialog: MatDialog,
+    private _markerService: MarkerService,
+  ) {}
 
   openSizeDialog(category: MarkerIconsPlace): void {
-    console.log("openSizeDialog", category);
-    this.dialog.open(SelectSizeDialogComponent, {
-      data: { category }
-    });
+    if(MarkerIconsPlace.City === category) {
+      this.dialog.open(SelectSizeDialogComponent, {
+        data: { category }
+      });
+
+      return;
+    }
+
+    var marker: MarkerIconInterface = {
+      type: category
+    };
+
+    this._markerService.setSelectedMarker(marker);
   }
 }

@@ -2,13 +2,14 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { PlaceService } from '../../shared/services/places.service';
 import { CityDialogComponent } from '../../shared/components/city-dialog/city-dialog.component';
-import { MarkerIconsSize } from '../../shared/enums/icons/marker-icons.enum';
+import { MarkerIconsPlace, MarkerIconsSize } from '../../shared/enums/icons/marker-icons.enum';
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MarkerIconInterface } from '../../shared/interfaces/icons/marker-icon.interface';
 import { ToolboxComponent } from '../../shared/components/toolbox/toolbox.component';
 import { MarkerService } from '../../shared/services/marker.service';
 import { CreateMarkerToolbarComponent } from '../../shared/components/create-marker-toolbar/create-marker-toolbar.component';
+import { CreatePlacesDTO } from '../../shared/interfaces/places/places.interface';
 
 @Component({
     selector: 'app-map-test',
@@ -48,6 +49,13 @@ export class MapTestComponent implements AfterViewInit, OnInit {
             };
         });
 
+        this._markerService.reloadMarkers$.subscribe(refresh => {
+            console.log("REFRESH", refresh)
+            if (refresh) {
+                this._refreshAllMarkers();
+            };
+        });
+
         this._markerService.saveMarker$.subscribe(marker => {
             if (marker) this._addMarkerToMap(marker);
         });
@@ -77,7 +85,7 @@ export class MapTestComponent implements AfterViewInit, OnInit {
 
             this._placesService.getPlaces().subscribe({
                 next: (places) => {
-                    places.forEach((place: any) => this._addMarkerToMap(place));
+                    places.forEach((place: CreatePlacesDTO) => this._addMarkerToMap(place));
                     this._updateVisibleLayers();
                 },
                 error: (error) => {
@@ -89,7 +97,7 @@ export class MapTestComponent implements AfterViewInit, OnInit {
         this._addPlacesByzoom();
     }
 
-    private  _addPlacesByzoom()  {
+    private _addPlacesByzoom() {
         this._map.on('zoomend', () => {
             this._updateVisibleLayers();
         });
@@ -97,13 +105,13 @@ export class MapTestComponent implements AfterViewInit, OnInit {
 
     private _updateVisibleLayers() {
         const zoom = this._map.getZoom();
-        if (zoom < -2.3) {
+        if (zoom < -1.3) {
             this._map.addLayer(this._continentLayer);
             this._map.removeLayer(this._regionLayer);
             this._map.removeLayer(this._cityLayer);
             this._map.removeLayer(this._placeLayer);
-        } else if (zoom >= -2.3 && zoom < -0.3) {
-            this._map.addLayer(this._continentLayer);
+        } else if (zoom >= -1.3 && zoom < -0.3) {
+            this._map.removeLayer(this._continentLayer);
             this._map.addLayer(this._regionLayer);
             this._map.removeLayer(this._cityLayer);
             this._map.removeLayer(this._placeLayer);
@@ -115,16 +123,16 @@ export class MapTestComponent implements AfterViewInit, OnInit {
         }
     }
 
-    private _addMarkerToMap(place: any): void {
-        const { y, x, name, iconSize: size } = place;
-
+    private _addMarkerToMap(place: CreatePlacesDTO): void {
+        const { y, x, name, iconSize: size, type, id: _id } = place;
         const iconClass = this._getIconCssClassBySize(size);
-
         const markerHTML = document.createElement('div');
-        markerHTML.className = `icon ${iconClass}`;
+
+        markerHTML.className = type === MarkerIconsPlace.Continent || type === MarkerIconsPlace.Region ? `map-label map-label-${type}` : `icon ${iconClass}`;
 
         const inner = document.createElement('div');
         inner.className = 'inner';
+
         markerHTML.appendChild(inner);
 
         const label = document.createElement('div');
@@ -139,19 +147,19 @@ export class MapTestComponent implements AfterViewInit, OnInit {
             iconAnchor: [20, 50]
         });
 
-        const marker = L.marker([y, x], { icon });
 
+        const marker = L.marker([y, x], { icon });
         switch (place.type) {
-            case 'continent':
+            case MarkerIconsPlace.Continent:
                 marker.addTo(this._continentLayer);
                 break;
-            case 'region':
+            case MarkerIconsPlace.Region:
                 marker.addTo(this._regionLayer);
                 break;
-            case 'city':
+            case MarkerIconsPlace.City:
                 marker.addTo(this._cityLayer);
                 break;
-            case 'place':
+            case MarkerIconsPlace.Place:
             default:
                 marker.addTo(this._placeLayer);
                 break;
@@ -167,7 +175,8 @@ export class MapTestComponent implements AfterViewInit, OnInit {
         markerHTML.addEventListener('click', openDialog);
     }
 
-    private _getIconCssClassBySize(size: MarkerIconsSize): string {
+
+    private _getIconCssClassBySize(size?: MarkerIconsSize): string {
         switch (size) {
             case MarkerIconsSize.Small: return 'common';
             case MarkerIconsSize.Medium: return 'elite';
@@ -180,12 +189,15 @@ export class MapTestComponent implements AfterViewInit, OnInit {
         const { lat: y, lng: x } = e.latlng;
 
         this._dialog.open(CityDialogComponent, {
-            width: '400px',
+            width: '800px',
             data: {
-                x,
-                y,
-                icon: {
-                    size: this.selectedPlacement?.size
+                placeData: {
+                    x,
+                    y,
+                    icon: {
+                        size: this.selectedPlacement?.size
+                    },
+                    type: this.selectedPlacement?.type
                 }
             }
         });
@@ -195,7 +207,7 @@ export class MapTestComponent implements AfterViewInit, OnInit {
         this.selectedPlacement = null;
 
         //clean listenner
-        this._map.off('click', this._handleMapClick); 
+        this._map.off('click', this._handleMapClick);
     }
 
     private _startPlacementMode(marker: MarkerIconInterface) {
@@ -204,6 +216,22 @@ export class MapTestComponent implements AfterViewInit, OnInit {
         this.selectedPlacement = marker;
 
         this.isCreating = true;
+    }
+
+    private _refreshAllMarkers(): void {
+        this._placesService.getPlaces().subscribe({
+            next: (places) => {
+                this._continentLayer.clearLayers();
+                this._regionLayer.clearLayers();
+                this._cityLayer.clearLayers();
+                this._placeLayer.clearLayers();
+
+                places.forEach((p: CreatePlacesDTO) => this._addMarkerToMap(p));
+
+                this._updateVisibleLayers();
+            },
+            error: (err) => console.error('Error refrescando lugares', err)
+        });
     }
 
     onAddPlacementMode(): void {

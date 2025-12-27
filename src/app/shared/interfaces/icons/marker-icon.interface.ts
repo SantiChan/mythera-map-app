@@ -1,5 +1,6 @@
-import { MarkerIconsSize } from "../../enums/icons/marker-icons.enum";
+import { MarkerIconsPlace, MarkerIconsSize } from "../../enums/icons/marker-icons.enum";
 
 export interface MarkerIconInterface {
-    size: MarkerIconsSize; 
+    size?: MarkerIconsSize;
+    type?: MarkerIconsPlace;
 };

@@ -1,4 +1,64 @@
-//@import "mapbox-gl/dist/mapbox-gl.css";
+@use 'assets/theme/theme' as theme;
+
+@include theme.apply-dark-theme();
+
+/* Tus variables/estilos de app */
+:root {
+  --light-black: #141218;
+  --font-white:  #e6e0e9;
+  --link-gold:   #c8aa6e;
+  --accent-purple: #7b5ea7;
+  --surface: #1b1921;
+  --error-red: #d64c4c;
+}
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--light-black);
+  color: var(--font-white);
+  font-family: Roboto, system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+a { color: var(--link-gold); text-decoration: none; }
+a:hover { color: var(--accent-purple); }
+
+.app-surface { background: var(--surface); color: var(--font-white); }
+.text-error { color: var(--error-red); }
+
+$space-scale: (
+  0: 0,
+  1: 4px,
+  2: 8px,
+  3: 16px,
+  4: 32px,
+  5: 64px
+);
+
+@each $key, $val in $space-scale {
+  /* Padding */
+  .p-#{$key}  { padding: $val !important; }
+  .pt-#{$key} { padding-top: $val !important; }
+  .pb-#{$key} { padding-bottom: $val !important; }
+  .pl-#{$key} { padding-left: $val !important; }
+  .pr-#{$key} { padding-right: $val !important; }
+  .px-#{$key} { padding-left: $val !important; padding-right: $val !important; }
+  .py-#{$key} { padding-top: $val !important; padding-bottom: $val !important; }
+
+  /* Margin */
+  .m-#{$key}  { margin: $val !important; }
+  .mt-#{$key} { margin-top: $val !important; }
+  .mb-#{$key} { margin-bottom: $val !important; }
+  .ml-#{$key} { margin-left: $val !important; }
+  .mr-#{$key} { margin-right: $val !important; }
+  .mx-#{$key} { margin-left: $val !important; margin-right: $val !important; }
+  .my-#{$key} { margin-top: $val !important; margin-bottom: $val !important; }
+}
+
+html {
+ --light-black: #141218;
+ --font-white: #e6e0e9;
+ --link-gold: #c8aa6e;
+}
 
 @font-face {
     font-family: 'Osgard';
@@ -42,8 +102,6 @@ body {
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
-    /*width: auto !important;
-    height: auto !important;*/
 }
 
 .leaflet-touch .leaflet-control-attribution {
@@ -200,4 +258,64 @@ body {
         left: 50%;
         transform: translate(-50%, -50%);
     }
+}
+
+
+// Label for continents and region
+.map-label {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  color: #f2f2f2;             
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: auto;      
+  user-select: none;
+
+  /* Quita la “flecha” del tooltip */
+  &::before { display: none; }
+}
+
+.map-label-1 {
+  font-size: 32px;   /* grande */
+  opacity: 0.9;
+}
+
+.map-label-2 {
+  font-size: 20px;   /* un poco más pequeño */
+  opacity: 0.85;
+}
+
+.leaflet-zoom-anim .map-label { transition: transform 0.2s ease; }
+
+// Snackbar 
+.snackbar-success .mat-mdc-snackbar-surface {
+  background-color: #4caf50 !important; // verde
+  color: #fff !important;
+}
+
+.snackbar-error .mat-mdc-snackbar-surface {
+  background-color: #f44336 !important; // rojo
+  color: #fff !important;
+}
+
+.snackbar-info .mat-mdc-snackbar-surface {
+  background-color: #2196f3 !important; // azul
+  color: #fff !important;
+}
+
+// Dialogs
+.mat-mdc-dialog-surface.mdc-dialog__surface {
+    padding: 0;
+    background-color: var(--light-black);
+    color: var(--font-white);
+}
+
+.mat-mdc-fab-base .mat-icon, .mat-mdc-fab-base .material-icons {
+    color: var(--light-black)
 }
