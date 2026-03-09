@@ -10,6 +10,11 @@
     <form [formGroup]="sessionForm">
       <!-- Basic Info -->
       <div class="basic-info">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Título de la Partida</mat-label>
+          <input matInput formControlName="title" placeholder="Ej: La batalla del abismo" />
+        </mat-form-field>
+        
         <mat-form-field appearance="outline">
           <mat-label>Tipo</mat-label>
           <mat-select formControlName="type">
@@ -21,7 +26,7 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Nivel de Inicio</mat-label>
-          <input matInput type="number" formControlName="startLevel" min="1" />
+          <input matInput type="text" formControlName="startLevel" placeholder="Ej: 5, 5-7, +10" />
         </mat-form-field>
       </div>
 
@@ -29,7 +34,7 @@
       <div class="section">
         <div class="section-header">
           <h3>Jugadores</h3>
-          <button mat-mini-fab color="primary" type="button" (click)="addPlayer()">
+          <button mat-mini-fab class="gold-fab" type="button" (click)="addPlayer()">
             <mat-icon>add</mat-icon>
           </button>
         </div>
@@ -68,7 +73,7 @@
       <div class="section">
         <div class="section-header">
           <h3>Contenidos</h3>
-          <button mat-mini-fab color="primary" type="button" (click)="addContent()">
+          <button mat-mini-fab class="gold-fab" type="button" (click)="addContent()">
             <mat-icon>add</mat-icon>
           </button>
         </div>

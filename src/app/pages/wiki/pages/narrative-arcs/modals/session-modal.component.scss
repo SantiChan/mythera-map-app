@@ -34,6 +34,10 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 32px;
+
+  .full-width {
+    grid-column: 1 / -1;
+  }
 }
 
 .section {
@@ -147,6 +151,11 @@
       background-color: rgba(200, 170, 110, 0.05);
       border-color: rgba(200, 170, 110, 0.3);
       color: #e6e0e9;
+    }
+
+    .gold-fab {
+      background-color: var(--link-gold) !important;
+      color: #1e1e1e !important;
     }
   }
 }

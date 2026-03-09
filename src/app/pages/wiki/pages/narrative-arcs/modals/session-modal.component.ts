@@ -48,8 +48,9 @@ export class SessionModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { session?: any }
   ) {
     this.sessionForm = this.fb.group({
+      title: ['', Validators.required],
       type: ['Campaña', Validators.required],
-      startLevel: [1, [Validators.required, Validators.min(1)]],
+      startLevel: ['', Validators.required],
       players: this.fb.array([]),
       contents: this.fb.array([])
     });
@@ -58,6 +59,7 @@ export class SessionModalComponent implements OnInit {
   ngOnInit() {
     if (this.data.session) {
       this.sessionForm.patchValue({
+        title: this.data.session.title,
         type: this.data.session.type,
         startLevel: this.data.session.startLevel
       });

@@ -10,6 +10,7 @@ import { NarrativeArcsService } from '../../../../shared/services/wiki/narrative
 import { SnackbarService } from '../../../../shared/services/snackbar.service';
 import { NarrativeArcModalComponent } from './modals/narrative-arc-modal.component';
 import { SessionModalComponent } from './modals/session-modal.component';
+import { ConfirmModalComponent } from './modals/confirm-modal.component';
 
 @Component({
   selector: 'app-narrative-arc-detail',
@@ -35,7 +36,7 @@ export class NarrativeArcDetailComponent implements OnInit {
     private dialog: MatDialog,
     private narrativeArcsService: NarrativeArcsService,
     private snackbar: SnackbarService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.arcId = this.route.snapshot.paramMap.get('id') || '';
@@ -45,6 +46,7 @@ export class NarrativeArcDetailComponent implements OnInit {
   loadArcDetails() {
     this.narrativeArcsService.getById(this.arcId).subscribe({
       next: (arc) => {
+        console.log("arco", arc)
         this.arc = arc;
       },
       error: (err) => {
@@ -138,18 +140,26 @@ export class NarrativeArcDetailComponent implements OnInit {
   }
 
   deleteSession(sessionId: string) {
-    if (!confirm('¿Estás seguro de que quieres eliminar esta partida?')) {
-      return;
-    }
+    const dialogRef = this.dialog.open(ConfirmModalComponent, {
+      width: '400px',
+      data: {
+        title: 'Confirmar Eliminación',
+        message: '¿Estás seguro de que quieres eliminar esta partida? Esta acción no se puede deshacer.'
+      }
+    });
 
-    this.narrativeArcsService.deleteSession(this.arcId, sessionId).subscribe({
-      next: () => {
-        this.loadArcDetails();
-        this.snackbar.success('Partida eliminada');
-      },
-      error: (err) => {
-        console.error(err);
-        this.snackbar.error('Error al eliminar partida');
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.narrativeArcsService.deleteSession(this.arcId, sessionId).subscribe({
+          next: () => {
+            this.loadArcDetails();
+            this.snackbar.success('Partida eliminada');
+          },
+          error: (err) => {
+            console.error(err);
+            this.snackbar.error('Error al eliminar partida');
+          }
+        });
       }
     });
   }

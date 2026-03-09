@@ -6,7 +6,7 @@
            alt="arc" 
            class="preview-img" />
       
-      <div *ngIf="!imagePreview" class="no-image-placeholder">
+      <div *ngIf="!imagePreview" class="no-image-placeholder" (click)="fileInput.click()">
         <mat-icon>auto_stories</mat-icon>
         <p>Sin imagen</p>
       </div>

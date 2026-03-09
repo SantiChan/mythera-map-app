@@ -31,8 +31,10 @@
       <mat-expansion-panel *ngFor="let session of arc.sessions" class="session-panel">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <mat-icon class="session-icon">{{ session.type === 'Campaña' ? 'campaign' : session.type === 'Quest' ? 'explore' : 'event' }}</mat-icon>
-            <span class="session-type">{{ session.type }}</span>
+            <mat-icon class="session-icon">{{ session.type === 'Campaña' ? 'campaign' : session.type === 'Quest' ?
+              'explore' : 'event' }}</mat-icon>
+            <span class="session-title">{{ session.title }}</span>
+            <span class="session-type">({{ session.type }})</span>
             <span class="session-level">Nivel {{ session.startLevel }}</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
@@ -68,7 +70,7 @@
 
           <!-- Contents -->
           <div class="session-section" *ngIf="session.contents && session.contents.length > 0">
-            <h3>Contenidos</h3>
+            <h3>Sesiones</h3>
             <div class="contents-list">
               <mat-card *ngFor="let content of session.contents; let i = index" class="content-card">
                 <mat-card-header>
@@ -90,7 +92,9 @@
             </div>
           </div>
 
-          <div *ngIf="(!session.players || session.players.length === 0) && (!session.contents || session.contents.length === 0)" class="empty-session">
+          <div
+            *ngIf="(!session.players || session.players.length === 0) && (!session.contents || session.contents.length === 0)"
+            class="empty-session">
             No hay información adicional para esta partida
           </div>
         </div>
