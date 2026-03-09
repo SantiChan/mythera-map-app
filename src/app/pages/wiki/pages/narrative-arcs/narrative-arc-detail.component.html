@@ -1,0 +1,104 @@
+<div class="arc-detail" *ngIf="arc">
+  <div class="arc-header">
+    <button mat-icon-button class="back-button" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <button mat-stroked-button color="primary" (click)="editArc()">
+      <mat-icon>edit</mat-icon>
+      Editar Arco
+    </button>
+  </div>
+
+  <div class="arc-image" *ngIf="arc.imageUrl">
+    <img [src]="arc.imageUrl" [alt]="arc.title" />
+  </div>
+
+  <div class="arc-content">
+    <h1>{{ arc.title }}</h1>
+    <div class="arc-description" [innerHTML]="arc.descriptionHtml"></div>
+  </div>
+
+  <div class="sessions-section">
+    <div class="sessions-header">
+      <h2>Partidas</h2>
+      <button mat-raised-button color="primary" (click)="addSession()">
+        <mat-icon>add</mat-icon>
+        Añadir Partida
+      </button>
+    </div>
+
+    <div class="sessions-list" *ngIf="arc.sessions && arc.sessions.length > 0">
+      <mat-expansion-panel *ngFor="let session of arc.sessions" class="session-panel">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon class="session-icon">{{ session.type === 'Campaña' ? 'campaign' : session.type === 'Quest' ? 'explore' : 'event' }}</mat-icon>
+            <span class="session-type">{{ session.type }}</span>
+            <span class="session-level">Nivel {{ session.startLevel }}</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <div class="session-content">
+          <div class="session-actions">
+            <button mat-icon-button color="primary" (click)="editSession(session)" matTooltip="Editar">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteSession(session._id)" matTooltip="Eliminar">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <!-- Players -->
+          <div class="session-section" *ngIf="session.players && session.players.length > 0">
+            <h3>Jugadores</h3>
+            <div class="players-grid">
+              <mat-card *ngFor="let player of session.players" class="player-card">
+                <mat-card-content>
+                  <div class="player-info">
+                    <mat-icon>person</mat-icon>
+                    <div>
+                      <div class="player-name">{{ player.name }}</div>
+                      <div class="player-character">{{ player.character }}</div>
+                      <div class="player-level">Nivel {{ player.level }}</div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+
+          <!-- Contents -->
+          <div class="session-section" *ngIf="session.contents && session.contents.length > 0">
+            <h3>Contenidos</h3>
+            <div class="contents-list">
+              <mat-card *ngFor="let content of session.contents; let i = index" class="content-card">
+                <mat-card-header>
+                  <mat-card-title>{{ content.title }}</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="content-summary">
+                    <div class="summary-section">
+                      <h4>Resumen Inicial</h4>
+                      <div [innerHTML]="content.initialSummary"></div>
+                    </div>
+                    <div class="summary-section">
+                      <h4>Resumen Final</h4>
+                      <div [innerHTML]="content.finalSummary"></div>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-card>
+            </div>
+          </div>
+
+          <div *ngIf="(!session.players || session.players.length === 0) && (!session.contents || session.contents.length === 0)" class="empty-session">
+            No hay información adicional para esta partida
+          </div>
+        </div>
+      </mat-expansion-panel>
+    </div>
+
+    <div *ngIf="!arc.sessions || arc.sessions.length === 0" class="empty-message">
+      No hay partidas añadidas. Haz clic en "Añadir Partida" para crear una.
+    </div>
+  </div>
+</div>

@@ -155,6 +155,12 @@ export class CityDialogComponent {
       return; 
     }
 
+    // Validar que haya imagen al crear un nuevo lugar
+    if (!this.data.editMode && !this.selectedFile) {
+      this._snackbar.error('Debes seleccionar una imagen');
+      return;
+    }
+
     const placeData: CreatePlacesDTO = {
       name: this.placeForm.value.name,
       type: this.data.placeData.type,

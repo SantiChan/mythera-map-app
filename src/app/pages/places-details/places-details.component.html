@@ -1,41 +1,308 @@
-<div class="container" @enterAnimation>
+<div class="container" @enterAnimation *ngIf="placeData">
+
+  <button mat-icon-button class="back-button" (click)="goBackToMap()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
   <div class="left-panel">
-    <h1>{{ cards[selected].title }}</h1>
-
-    <!-- Modo Vista -->
-    <div *ngIf="!isEditing">
-      <div *ngFor="let key of getFieldKeys(cards[selected].fields)" class="field-row">
-        <strong>{{ formatLabel(key) }}:</strong>
-        <p>{{ cards[selected].fields[key] }}</p>
+    <div *ngIf="placeData?.imageUrl" class="place-image">
+      <img [src]="placeData.imageUrl" [alt]="placeData.name" />
+      <div class="image-actions">
+        <input type="file" #imageInput (change)="onImageSelected($event)" accept="image/*" style="display: none;" />
+        <button mat-icon-button color="primary" (click)="imageInput.click()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button *ngIf="selectedImage" mat-icon-button color="accent" (click)="saveImage()">
+          <mat-icon>save</mat-icon>
+        </button>
       </div>
-      <button mat-raised-button color="primary" (click)="isEditing = true">Editar</button>
     </div>
 
-    <!-- Modo Edición -->
-    <div class="dark-theme-local">
+    <h1>{{ placeData?.name || current.title }}</h1>
 
-      <form *ngIf="isEditing" (ngSubmit)="saveEdit()" class="form-edit">
-        <div *ngFor="let key of getFieldKeys(cards[selected].fields)" class="form-row">
-          <mat-form-field appearance="fill" class="dark-field full-width">
-            <mat-label>{{ formatLabel(key) }}</mat-label>
-            <input matInput type="text" [name]="key" [id]="key" [ngModel]="getFieldValue(selected, key)"
-              (ngModelChange)="setFieldValue(selected, key, $event)" />
-          </mat-form-field>
-        </div>
+    <ng-container [ngSwitch]="current.type">
 
-        <div class="form-actions">
-          <button mat-raised-button color="primary" type="submit">Guardar</button>
-          <button mat-stroked-button type="button" (click)="isEditing = false">Cancelar</button>
-        </div>
-      </form>
-    </div>
+      <ng-container *ngSwitchCase="'description'">
+        <ng-container *ngIf="descriptionCard as d">
+
+          <div *ngIf="!isEditing">
+            <div [innerHTML]="d.descriptionHtml"></div>
+            <button mat-stroked-button color="primary" (click)="isEditing = true">Editar</button>
+          </div>
+
+          <div *ngIf="isEditing" class="form-edit">
+            <angular-editor [(ngModel)]="d.descriptionHtml" [config]="editorConfig"></angular-editor>
+
+            <div class="form-actions">
+              <button mat-stroked-button color="primary"  (click)="saveDescription()">Guardar</button>
+              <button mat-stroked-button color="danger" (click)="isEditing = false">Cancelar</button>
+            </div>
+          </div>
+
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'creatures'">
+        <ng-container *ngIf="creaturesCard as c">
+
+          <div *ngIf="!isEditing">
+            <div class="field-row">
+              <strong>Criaturas:</strong>
+              <p>{{ c.creatures }}</p>
+            </div>
+
+            <div class="field-row">
+              <strong>Legendarias:</strong>
+              <p>{{ c.legendaryCreatures }}</p>
+            </div>
+
+            <div class="field-row">
+              <strong>Objetos conocidos:</strong>
+              <ul>
+                <li *ngFor="let obj of c.objects">
+                  <b>{{ obj.name }}</b>
+                  <span *ngIf="obj.description"> — {{ obj.description }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="field-row">
+              <strong>Peanas / Ejército:</strong>
+              <ul>
+                <li *ngFor="let a of c.army">
+                  <b>{{ a.name }}</b>
+                  <span *ngIf="a.description"> — {{ a.description }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <button mat-stroked-button color="primary" (click)="isEditing = true">Editar</button>
+          </div>
+
+          <div *ngIf="isEditing" class="form-edit">
+
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Criaturas</mat-label>
+              <input matInput [(ngModel)]="c.creatures" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Legendarias</mat-label>
+              <input matInput [(ngModel)]="c.legendaryCreatures" />
+            </mat-form-field>
+
+            <button mat-stroked-button color="primary" (click)="saveCreatures()" class="mt-3">Guardar</button>
+
+            <div class="list-editor">
+              <h3>Objetos conocidos</h3>
+
+              <div class="add-row">
+                <mat-form-field appearance="fill" class="full-width">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput [(ngModel)]="objectForm.name" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                  <mat-label>Descripción</mat-label>
+                  <input matInput [(ngModel)]="objectForm.description" />
+                </mat-form-field>
+
+                <button mat-stroked-button color="primary" type="button" (click)="addObject()" 
+                        [disabled]="!objectForm.name.trim()">
+                  {{ editingObject ? 'Guardar' : 'Añadir' }}
+                </button>
+                <button *ngIf="editingObject" mat-stroked-button type="button" (click)="cancelObjectEdit()">
+                  Cancelar
+                </button>
+              </div>
+
+              <ul class="item-list">
+                <li *ngFor="let obj of c.objects; index as i" class="item-row">
+                  <div class="item-content">
+                    <b>{{ obj.name }}</b><br />
+                    <small>{{ obj.description }}</small>
+                  </div>
+                  <div class="item-actions">
+                    <button mat-stroked-button color="primary" type="button"
+                            (click)="editObject(obj)">
+                      Editar
+                    </button>
+                    <button mat-stroked-button color="warn" type="button"
+                            (click)="deleteObject(obj)">
+                      Borrar
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="list-editor">
+              <h3>Peanas / Ejército</h3>
+
+              <div class="add-row">
+                <mat-form-field appearance="fill" class="full-width">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput [(ngModel)]="armyForm.name" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                  <mat-label>Descripción</mat-label>
+                  <input matInput [(ngModel)]="armyForm.description" />
+                </mat-form-field>
+
+                <button mat-stroked-button color="primary" type="button" (click)="addArmy()" 
+                        [disabled]="!armyForm.name.trim()">
+                  {{ editingArmy ? 'Guardar' : 'Añadir' }}
+                </button>
+                <button *ngIf="editingArmy" mat-stroked-button type="button" (click)="cancelArmyEdit()">
+                  Cancelar
+                </button>
+              </div>
+
+              <ul class="item-list">
+                <li *ngFor="let a of c.army; index as i" class="item-row">
+                  <div class="item-content">
+                    <b>{{ a.name }}</b><br />
+                    <small>{{ a.description }}</small>
+                  </div>
+                  <div class="item-actions">
+                    <button mat-stroked-button color="primary" type="button"
+                            (click)="editArmy(a)">
+                      Editar
+                    </button>
+                    <button mat-stroked-button color="warn" type="button"
+                            (click)="deleteArmy(a)">
+                      Borrar
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="form-actions">
+              <button mat-stroked-button color="danger" (click)="isEditing = false">Cancelar</button>
+            </div>
+
+          </div>
+
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'places'">
+        <ng-container *ngIf="placesCard as p">
+
+          <div *ngIf="!isEditing">
+            <strong>Sitios de interés:</strong>
+            <ul>
+              <li *ngFor="let item of p.placesOfInterest">
+                <b>{{ item.name }}</b>
+                <span *ngIf="item.description"> — {{ item.description }}</span>
+              </li>
+            </ul>
+
+            <button mat-stroked-button color="primary" (click)="isEditing = true">Editar</button>
+          </div>
+
+          <div *ngIf="isEditing" class="form-edit">
+            <div class="list-editor">
+              <h3>Sitios de interés</h3>
+
+              <div class="add-row">
+                <mat-form-field appearance="fill" class="full-width">
+                  <mat-label>Nombre</mat-label>
+                  <input matInput [(ngModel)]="placeForm.name" />
+                </mat-form-field>
+
+                <mat-form-field appearance="fill" class="full-width">
+                  <mat-label>Descripción</mat-label>
+                  <input matInput [(ngModel)]="placeForm.description" />
+                </mat-form-field>
+
+                <button mat-stroked-button color="primary" type="button" (click)="addNamedItem(p.placesOfInterest)" 
+                        [disabled]="!placeForm.name.trim()">
+                  {{ editingPlaceOfInterest ? 'Guardar' : 'Añadir' }}
+                </button>
+                <button *ngIf="editingPlaceOfInterest" mat-stroked-button type="button" (click)="cancelPlaceOfInterestEdit()">
+                  Cancelar
+                </button>
+              </div>
+
+              <ul class="item-list">
+                <li *ngFor="let item of p.placesOfInterest; index as i" class="item-row">
+                  <div class="item-content">
+                    <b>{{ item.name }}</b><br />
+                    <small>{{ item.description }}</small>
+                  </div>
+                  <div class="item-actions">
+                    <button mat-stroked-button color="primary" type="button"
+                            (click)="editPlaceOfInterest(item)">
+                      Editar
+                    </button>
+                    <button mat-stroked-button color="warn" type="button"
+                            (click)="deletePlaceOfInterest(item)">
+                      Borrar
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="form-actions">
+              <button mat-stroked-button color="danger" (click)="isEditing = false">Cancelar</button>
+            </div>
+          </div>
+
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'npcs'">
+        <ng-container *ngIf="npcsCard as n">
+
+          <div class="npc-grid">
+            <div class="npc-card add" (click)="addNpc()">
+              <div class="plus">+</div>
+              <div>Añadir</div>
+            </div>
+
+            <div class="npc-card flip"
+                 *ngFor="let npc of n.npcs"
+                 [class.flipped]="flippedNpcIds.has(npc.id)">
+
+              <div class="flip-inner">
+                <div class="flip-front" (click)="toggleFlip(npc.id)">
+                  <img [src]="npc.image" [alt]="npc.name" />
+                </div>
+
+                <div class="flip-back" (click)="toggleFlip(npc.id)">
+                  <div class="npc-name">{{ npc.name }}</div>
+                  <div class="npc-title">{{ npc.title }}</div>
+
+                  <div class="npc-actions">
+                    <button mat-stroked-button color="primary" type="button" (click)="openNpcModal(npc)">
+                      Ver / Editar
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </ng-container>
+      </ng-container>
+
+    </ng-container>
   </div>
 
-  <!-- Tarjetas -->
+  <!-- CARDS -->
   <div class="cards">
-    <div class="card" *ngFor="let card of cards; index as i" [class.active]="i === selected" (click)="selectTab(i)">
+    <div class="card"
+         *ngFor="let card of cards; index as i"
+         [class.active]="i === selected"
+         (click)="selectTab(i)">
       <img [src]="card.image" [alt]="card.title" />
       <div>{{ card.title }}</div>
     </div>
   </div>
+
 </div>

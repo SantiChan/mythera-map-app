@@ -1,0 +1,86 @@
+<div mat-dialog-content class="npc-modal__wrapper">
+  <!-- View Mode -->
+  <div *ngIf="!editMode" class="npc-modal__content">
+    <div class="image-preview">
+      <img [src]="data.npc.image" alt="npc" class="preview-img" />
+      
+      <button mat-icon-button class="icon-btn close-btn" (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    
+    <div class="npc-modal__text-wrapper">
+      <h1>{{ data.npc.name }}</h1>
+      <h3 class="npc-title">{{ data.npc.title }}</h3>
+      <p class="npc-personality">{{ data.npc.personality }}</p>
+      
+      <div class="npc-description">
+        <h4>Descripción</h4>
+        <div [innerHTML]="data.npc.descriptionHtml"></div>
+      </div>
+
+      <div class="npc-modal__actions">
+        <button mat-stroked-button color="primary" (click)="editMode = true">Editar</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Edit Mode -->
+  <div *ngIf="editMode" class="npc-modal__content">
+    <div class="image-preview">
+      <img *ngIf="imagePreview || data.npc.image" 
+           [src]="imagePreview || data.npc.image" 
+           alt="npc" 
+           class="preview-img" />
+      
+      <div *ngIf="!imagePreview && !data.npc.image" class="no-image-placeholder">
+        <mat-icon>person</mat-icon>
+        <p>Sin imagen</p>
+      </div>
+      
+      <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;" />
+      
+      <button mat-icon-button class="icon-btn close-btn" (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+      
+      <button mat-icon-button class="icon-btn edit-image-btn" (click)="fileInput.click()">
+        <mat-icon>{{ (imagePreview || data.npc.image) ? 'edit' : 'add_photo_alternate' }}</mat-icon>
+      </button>
+      
+      <button *ngIf="selectedFile" mat-icon-button class="icon-btn save-image-btn" (click)="confirmImageChange()">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+    
+    <div class="npc-modal__text-wrapper">
+      <h2>{{ data.newNpc ? 'Nuevo personaje' : 'Editar personaje' }}</h2>
+      
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Nombre</mat-label>
+        <input matInput [(ngModel)]="data.npc.name" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Título</mat-label>
+        <input matInput [(ngModel)]="data.npc.title" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Personalidad</mat-label>
+        <input matInput [(ngModel)]="data.npc.personality" />
+      </mat-form-field>
+
+      <div class="editor-wrapper">
+        <label>Descripción</label>
+        <angular-editor [(ngModel)]="data.npc.descriptionHtml" [config]="editorConfig"></angular-editor>
+      </div>
+
+      <div class="npc-modal__actions">
+        <button *ngIf="!data.newNpc" mat-stroked-button type="button" (click)="back()">Volver</button>
+        <button mat-stroked-button color="warn" type="button" (click)="close()">Cancelar</button>
+        <button mat-stroked-button color="primary" type="button" (click)="save()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

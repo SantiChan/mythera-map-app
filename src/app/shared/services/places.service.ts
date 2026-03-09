@@ -50,7 +50,10 @@ export class PlaceService {
 
     getPlaces(): Observable<any> {
         return this._apiService.get(API_CALLS.place);
+    }
 
+    getPlaceDetails(id: string): Observable<any> {
+        return this._apiService.get(`${API_CALLS.place}/details/${id}`);
     }
 
     updatePlace(id: string, data: CreatePlacesDTO, file?: File): Observable<any> {
@@ -68,7 +71,89 @@ export class PlaceService {
         return this._apiService.patch(`${API_CALLS.place}/${id}`, formData);
     }
 
+    updatePlaceImage(id: string, file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+        return this._apiService.patch(`${API_CALLS.place}/${id}/image`, formData);
+    }
+
+    updateDescription(placeId: string, descriptionHtml: string): Observable<any> {
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/description`, { descriptionHtml });
+    }
+
+    updateCreatures(placeId: string, data: { creatures?: string; legendaryCreatures?: string }): Observable<any> {
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/creatures`, data);
+    }
+
     deletePlace(id: string): Observable<any> {
         return this._apiService.delete(`${API_CALLS.place}/${id}`);
+    }
+
+    addPlaceOfInterest(placeId: string, data: { name: string; description: string }): Observable<any> {
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/places-of-interest`, data);
+    }
+
+    updatePlaceOfInterest(placeId: string, placeOfInterestId: string, data: { name: string; description: string }): Observable<any> {
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/places-of-interest/${placeOfInterestId}`, data);
+    }
+
+    deletePlaceOfInterest(placeId: string, placeOfInterestId: string): Observable<any> {
+        return this._apiService.delete(`${API_CALLS.place}/${placeId}/places-of-interest/${placeOfInterestId}`);
+    }
+
+    addObject(placeId: string, data: { name: string; description: string }): Observable<any> {
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/objects`, data);
+    }
+
+    updateObject(placeId: string, objectId: string, data: { name: string; description: string }): Observable<any> {
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/objects/${objectId}`, data);
+    }
+
+    deleteObject(placeId: string, objectId: string): Observable<any> {
+        return this._apiService.delete(`${API_CALLS.place}/${placeId}/objects/${objectId}`);
+    }
+
+    addArmy(placeId: string, data: { name: string; description: string }): Observable<any> {
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/army`, data);
+    }
+
+    updateArmy(placeId: string, armyId: string, data: { name: string; description: string }): Observable<any> {
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/army/${armyId}`, data);
+    }
+
+    deleteArmy(placeId: string, armyId: string): Observable<any> {
+        return this._apiService.delete(`${API_CALLS.place}/${placeId}/army/${armyId}`);
+    }
+
+    addNpc(placeId: string, npcData: any, file?: File): Observable<any> {
+        const formData = new FormData();
+        
+        if (npcData.id) formData.append('id', npcData.id);
+        if (npcData.name) formData.append('name', npcData.name);
+        if (npcData.title) formData.append('title', npcData.title);
+        if (npcData.descriptionHtml) formData.append('descriptionHtml', npcData.descriptionHtml);
+        if (npcData.personality) formData.append('personality', npcData.personality);
+        if (npcData.image) formData.append('image', npcData.image);
+        if (file) formData.append('file', file);
+
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/npcs`, formData);
+    }
+
+    updateNpc(placeId: string, npcId: string, npcData: any, file?: File): Observable<any> {
+        const formData = new FormData();
+        
+        if (npcData.id) formData.append('id', npcData.id);
+        if (npcData.name) formData.append('name', npcData.name);
+        if (npcData.title) formData.append('title', npcData.title);
+        if (npcData.descriptionHtml) formData.append('descriptionHtml', npcData.descriptionHtml);
+        if (npcData.personality) formData.append('personality', npcData.personality);
+        if (npcData.image) formData.append('image', npcData.image);
+        if (file) formData.append('file', file);
+
+        return this._apiService.patch(`${API_CALLS.place}/${placeId}/npcs/${npcId}`, formData);
+    }
+
+    deleteNpc(placeId: string, npcId: string): Observable<any> {
+        return this._apiService.delete(`${API_CALLS.place}/${placeId}/npcs/${npcId}`);
     }
 }

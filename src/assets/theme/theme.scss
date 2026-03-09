@@ -72,7 +72,35 @@ $dark: mat.define-theme((
         /* Tooltips */
         --mdc-tooltip-container-color:              color-mix(in oklab, var(--mat-sys-color-primary) 90%, #000);
 
-        --mat-icon-color:                           var(--mat-sys-color-on-primary-container);             
+        --mat-icon-color:                           var(--mat-sys-color-on-primary-container);
+
+        /* Form Fields (Inputs) */
+        --mdc-filled-text-field-active-indicator-color:           var(--mat-sys-color-primary);
+        --mdc-filled-text-field-focus-active-indicator-color:     var(--mat-sys-color-primary);
+        --mdc-filled-text-field-hover-active-indicator-color:     var(--mat-sys-color-primary);
+        --mdc-filled-text-field-label-text-color:                 rgba(200, 170, 110, 0.7);
+        --mdc-filled-text-field-focus-label-text-color:           var(--mat-sys-color-primary);
+        --mdc-filled-text-field-hover-label-text-color:           var(--mat-sys-color-primary);
+        --mdc-filled-text-field-input-text-color:                 #ffffff;
+        --mdc-filled-text-field-caret-color:                      var(--mat-sys-color-primary);
+        
+        --mdc-outlined-text-field-outline-color:                  rgba(200, 170, 110, 0.4);
+        --mdc-outlined-text-field-focus-outline-color:            var(--mat-sys-color-primary);
+        --mdc-outlined-text-field-hover-outline-color:            var(--mat-sys-color-primary);
+        --mdc-outlined-text-field-label-text-color:               rgba(200, 170, 110, 0.7);
+        --mdc-outlined-text-field-focus-label-text-color:         var(--mat-sys-color-primary);
+        --mdc-outlined-text-field-hover-label-text-color:         var(--mat-sys-color-primary);
+        --mdc-outlined-text-field-input-text-color:               #ffffff;
+        --mdc-outlined-text-field-caret-color:                    var(--mat-sys-color-primary);
+
+        /* Select */
+        --mat-select-focused-arrow-color:                         var(--mat-sys-color-primary);
+        --mat-select-trigger-text-color:                          #ffffff;
+        
+        /* Datepicker */
+        --mat-datepicker-calendar-date-selected-state-background-color: var(--mat-sys-color-primary);
+        --mat-datepicker-calendar-date-selected-state-text-color:       var(--mat-sys-color-on-primary);
+        --mat-datepicker-calendar-date-today-outline-color:             var(--mat-sys-color-primary);
     }
   }
 }

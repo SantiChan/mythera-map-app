@@ -1,0 +1,122 @@
+<mat-sidenav-container class="wiki-container">
+  <mat-sidenav mode="side" opened class="wiki-sidenav">
+    <div class="wiki-header">
+      <button mat-icon-button routerLink="/" class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>Mythera Wiki</h2>
+    </div>
+
+    <mat-nav-list>
+      
+      <!-- Partidas -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>campaign</mat-icon>
+            <span>Partidas</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="/wiki/arcos-narrativos" routerLinkActive="active">
+            <mat-icon>auto_stories</mat-icon>
+            <span>Arcos Narrativos</span>
+          </a>
+          <a mat-list-item routerLink="/wiki/linea-temporal" routerLinkActive="active">
+            <mat-icon>timeline</mat-icon>
+            <span>Línea Temporal</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Seres Inmortales -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>auto_awesome</mat-icon>
+            <span>Seres Inmortales</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="/wiki/dioses" routerLinkActive="active">
+            <mat-icon>church</mat-icon>
+            <span>Dioses</span>
+          </a>
+          <a mat-list-item routerLink="/wiki/eternos" routerLinkActive="active">
+            <mat-icon>stars</mat-icon>
+            <span>Eternos</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Razas -->
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-icon>groups</mat-icon>
+            <span>Razas</span>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <a mat-list-item routerLink="/wiki/humanos" routerLinkActive="active">
+            <mat-icon>person</mat-icon>
+            <span>Humanos</span>
+          </a>
+          <a mat-list-item routerLink="/wiki/elfos" routerLinkActive="active">
+            <mat-icon>nature_people</mat-icon>
+            <span>Elfos</span>
+          </a>
+          <a mat-list-item routerLink="/wiki/enanos" routerLinkActive="active">
+            <mat-icon>engineering</mat-icon>
+            <span>Enanos</span>
+          </a>
+          <a mat-list-item routerLink="/wiki/gnomos" routerLinkActive="active">
+            <mat-icon>psychology</mat-icon>
+            <span>Gnomos</span>
+          </a>
+          <a mat-list-item routerLink="/wiki/medianos" routerLinkActive="active">
+            <mat-icon>child_care</mat-icon>
+            <span>Medianos</span>
+          </a>
+          <a mat-list-item routerLink="/wiki/orcos" routerLinkActive="active">
+            <mat-icon>fitness_center</mat-icon>
+            <span>Orcos</span>
+          </a>
+          <a mat-list-item routerLink="/wiki/razas-unicas" routerLinkActive="active">
+            <mat-icon>diamond</mat-icon>
+            <span>Razas Únicas</span>
+          </a>
+        </mat-nav-list>
+      </mat-expansion-panel>
+
+      <!-- Personajes -->
+      <a mat-list-item routerLink="/wiki/personajes" routerLinkActive="active">
+        <mat-icon>face</mat-icon>
+        <span>Personajes</span>
+      </a>
+
+      <!-- Organizaciones -->
+      <a mat-list-item routerLink="/wiki/organizaciones" routerLinkActive="active">
+        <mat-icon>corporate_fare</mat-icon>
+        <span>Organizaciones</span>
+      </a>
+
+      <!-- Normas de la Mesa -->
+      <a mat-list-item routerLink="/wiki/normas-mesa" routerLinkActive="active">
+        <mat-icon>gavel</mat-icon>
+        <span>Normas de la Mesa</span>
+      </a>
+
+      <!-- Eventos Históricos -->
+      <a mat-list-item routerLink="/wiki/eventos-historicos" routerLinkActive="active">
+        <mat-icon>history_edu</mat-icon>
+        <span>Eventos Históricos</span>
+      </a>
+
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="wiki-content">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

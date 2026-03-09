@@ -9,10 +9,14 @@ export class LoaderService {
   isLoading$ = this.loading.asObservable();
 
   show() {
-    this.loading.next(true);
+    setTimeout(() => {
+      this.loading.next(true);
+    });
   }
 
   hide() {
-    this.loading.next(false);
+    setTimeout(() => {
+      this.loading.next(false);
+    });
   }
 }

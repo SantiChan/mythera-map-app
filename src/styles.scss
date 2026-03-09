@@ -108,8 +108,12 @@ body {
     display: none;
 }
 
+.cdk-overlay-pane.mat-mdc-dialog-panel {
+    overflow-y: auto;
+}
+
 .mat-mdc-dialog-surface {
-    overflow: initial !important;
+    //overflow: initial !important;
     padding: 20px;
 }
 
@@ -153,15 +157,27 @@ body {
     }
 
     .mat-form-field-underline::before {
-        background-color: #555;
+        background-color: rgba(200, 170, 110, 0.4);
     }
 
     .mat-form-field-ripple {
-        background-color: #ffd700;
+        background-color: #c8aa6e;
     }
 
     .mat-focused .mat-form-field-label {
-        color: #fff;
+        color: #c8aa6e;
+    }
+
+    .mat-form-field-label {
+        color: rgba(200, 170, 110, 0.7);
+    }
+
+    .mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+        color: #c8aa6e !important;
+    }
+
+    .mdc-line-ripple::after {
+        border-bottom-color: #c8aa6e !important;
     }
 }
 
@@ -295,17 +311,17 @@ body {
 
 // Snackbar 
 .snackbar-success .mat-mdc-snackbar-surface {
-  background-color: #4caf50 !important; // verde
+  background-color: #4caf50 !important; 
   color: #fff !important;
 }
 
 .snackbar-error .mat-mdc-snackbar-surface {
-  background-color: #f44336 !important; // rojo
+  background-color: #f44336 !important; 
   color: #fff !important;
 }
 
 .snackbar-info .mat-mdc-snackbar-surface {
-  background-color: #2196f3 !important; // azul
+  background-color: #2196f3 !important;
   color: #fff !important;
 }
 
@@ -318,4 +334,195 @@ body {
 
 .mat-mdc-fab-base .mat-icon, .mat-mdc-fab-base .material-icons {
     color: var(--light-black)
+}
+
+.mat-mdc-outlined-button.mat-danger:not(:disabled) {
+    color: var(--error-red);
+    border-color: var(--error-red);
+}
+
+.mat-mdc-outlined-button.mat-warn:not(:disabled) {
+    color: var(--font-white);
+    border-color: var(--font-white);
+}
+
+// Override Material button colors to use gold
+.mat-mdc-button.mat-primary,
+.mat-mdc-outlined-button.mat-primary,
+.mat-mdc-raised-button.mat-primary,
+.mat-mdc-unelevated-button.mat-primary,
+.mat-mdc-fab.mat-primary,
+.mat-mdc-mini-fab.mat-primary {
+    --mdc-text-button-label-text-color: var(--link-gold);
+    --mdc-outlined-button-label-text-color: var(--link-gold);
+    --mdc-outlined-button-outline-color: var(--link-gold);
+    --mdc-filled-button-container-color: var(--link-gold);
+    --mdc-filled-button-label-text-color: var(--light-black);
+    --mdc-protected-button-container-color: var(--link-gold);
+    --mdc-protected-button-label-text-color: var(--light-black);
+}
+
+.mat-mdc-icon-button.mat-primary {
+    --mat-icon-button-state-layer-color: var(--link-gold);
+    --mdc-icon-button-icon-color: var(--link-gold);
+}
+
+// Checkbox, radio, slide toggle
+.mat-mdc-checkbox.mat-primary,
+.mat-mdc-radio-button.mat-primary,
+.mat-mdc-slide-toggle.mat-primary {
+    --mdc-checkbox-selected-icon-color: var(--link-gold);
+    --mdc-checkbox-selected-hover-icon-color: var(--link-gold);
+    --mdc-checkbox-selected-focus-icon-color: var(--link-gold);
+    --mdc-radio-selected-icon-color: var(--link-gold);
+    --mdc-switch-selected-track-color: var(--link-gold);
+}
+
+// Tabs
+.mat-mdc-tab-group.mat-primary {
+    --mat-tab-header-active-label-text-color: var(--link-gold);
+    --mat-tab-header-active-ripple-color: var(--link-gold);
+    --mat-tab-header-active-focus-label-text-color: var(--link-gold);
+    --mat-tab-header-active-hover-label-text-color: var(--link-gold);
+    --mdc-tab-indicator-active-indicator-color: var(--link-gold);
+}
+
+// Progress bar and spinner
+.mat-mdc-progress-bar.mat-primary,
+.mat-mdc-progress-spinner.mat-primary {
+    --mdc-linear-progress-active-indicator-color: var(--link-gold);
+    --mdc-circular-progress-active-indicator-color: var(--link-gold);
+}
+
+// Slider
+.mat-mdc-slider.mat-primary {
+    --mdc-slider-handle-color: var(--link-gold);
+    --mdc-slider-focus-handle-color: var(--link-gold);
+    --mdc-slider-hover-handle-color: var(--link-gold);
+    --mdc-slider-active-track-color: var(--link-gold);
+    --mdc-slider-inactive-track-color: rgba(200, 170, 110, 0.3);
+}
+
+// Chips
+.mat-mdc-chip.mat-primary {
+    --mdc-chip-elevated-container-color: rgba(200, 170, 110, 0.2);
+    --mdc-chip-label-text-color: var(--link-gold);
+}
+
+// Menu
+.mat-mdc-menu-item {
+    &:hover {
+        background-color: rgba(200, 170, 110, 0.1);
+    }
+}
+
+// Select dropdown
+.mat-mdc-select-panel {
+    .mat-mdc-option.mat-mdc-option-active,
+    .mat-mdc-option:hover:not(.mat-mdc-option-disabled) {
+        background-color: rgba(200, 170, 110, 0.1);
+    }
+    
+    .mat-mdc-option.mdc-list-item--selected:not(.mat-mdc-option-multiple) {
+        background-color: rgba(200, 170, 110, 0.2);
+    }
+}
+
+/* =========================================================
+   KOLKOV ANGULAR EDITOR — DARK THEME
+   Se activa cuando <body class="dark-theme">
+   ========================================================= */
+
+body.dark-theme {
+
+  /* ---------- Toolbar ---------- */
+  .angular-editor-toolbar {
+    background: #1f1f1f !important;
+    border: 1px solid #333 !important;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set {
+    border-color: #333 !important;
+  }
+
+  .angular-editor-toolbar button {
+    color: #e6e6e6 !important;
+    background: transparent !important;
+  }
+
+  .angular-editor-toolbar button:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+  }
+
+  .angular-editor-toolbar button.active {
+    background: rgba(255, 255, 255, 0.16) !important;
+  }
+
+  /* ---------- Dropdowns / selects ---------- */
+  .angular-editor-toolbar select,
+  .angular-editor-toolbar option {
+    background: #1f1f1f !important;
+    color: #e6e6e6 !important;
+    border-color: #333 !important;
+  }
+
+  /* ---------- Área editable ---------- */
+  .angular-editor-textarea {
+    background: #121212 !important;
+    color: #e6e6e6 !important;
+    border: 1px solid #333 !important;
+  }
+
+  /* Placeholder */
+  .angular-editor-textarea:empty:before {
+    color: rgba(230, 230, 230, 0.4) !important;
+  }
+
+  /* ---------- Modales internos (links, imágenes, etc.) ---------- */
+  .angular-editor-modal {
+    background: #1f1f1f !important;
+    color: #e6e6e6 !important;
+    border-color: #333 !important;
+  }
+
+  .angular-editor-modal input,
+  .angular-editor-modal textarea {
+    background: #121212 !important;
+    color: #e6e6e6 !important;
+    border-color: #333 !important;
+  }
+
+  /* ---------- Scrollbar (opcional, Chrome/Edge) ---------- */
+  .angular-editor-textarea::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .angular-editor-textarea::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+
+  .angular-editor-textarea::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 4px;
+  }
+
+  .angular-editor-toolbar .angular-editor-toolbar-set .select-font:hover,
+  .angular-editor-toolbar .angular-editor-toolbar-set .select-font-size:hover,
+  .angular-editor-toolbar .angular-editor-toolbar-set .select-heading:hover {
+    background-color: transparent!important;
+    color: #f1f1f1;
+  }
+
+  .ae-font .ae-picker-options .ae-picker-item {
+    background-color: #1f1f1f!important;
+    color: #f1f1f1!important;
+  }
+
+  .ae-font .ae-picker-options .ae-picker-item:hover {
+    background-color: #3e3d3d!important;
+  }
+
+  .angular-editor-textarea code {
+    background-color: inherit!important;
+  }
 }

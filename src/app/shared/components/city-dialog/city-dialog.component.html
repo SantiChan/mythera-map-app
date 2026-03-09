@@ -23,11 +23,12 @@
   
   <ng-template #editMode>
     <form [formGroup]="placeForm" (ngSubmit)="onSubmit()" class="city-dialog__content">
-      <div *ngIf="imagePreview" class="image-preview">
+      <div *ngIf="imagePreview" class="image-preview"  >
         <img [src]="imagePreview" alt="Imagen" class="preview-img" />
       </div>
-      <input type="file" (change)="onFileSelected($event)" accept="image/*" class="full-width" />
-      <mat-error *ngIf="!selectedFile">Debes seleccionar una imagen.</mat-error>
+      <div [ngClass]="{ 'pt-3 px-3' : !selectedFile }">
+        <input type="file" (change)="onFileSelected($event)" accept="image/*" class="full-width" />
+      </div>
       <div class="city-dialog__text-wrapper">
         <mat-form-field appearance="fill" class="full-width">
           <mat-label>Nombre del Lugar</mat-label>

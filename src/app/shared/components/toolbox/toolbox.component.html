@@ -1,5 +1,5 @@
-<button [matMenuTriggerFor]="menu" mat-mini-fab aria-label="Example icon button with a menu icon">
-  <mat-icon>menu</mat-icon>
+<button [matMenuTriggerFor]="menu" mat-mini-fab aria-label="Añadir lugares" class="add-button">
+  <mat-icon>add</mat-icon>
 </button>
 <mat-menu #menu="matMenu">
   <button mat-menu-item (click)="openSizeDialog(markerIconsPlace.Place)">
@@ -19,3 +19,7 @@
     <span>Continentes</span>
   </button>
 </mat-menu>
+
+<button mat-mini-fab aria-label="Abrir Wiki" class="wiki-button" (click)="goToWiki()">
+  <mat-icon>menu_book</mat-icon>
+</button>

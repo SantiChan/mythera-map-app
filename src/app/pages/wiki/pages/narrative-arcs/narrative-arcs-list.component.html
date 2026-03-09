@@ -1,0 +1,35 @@
+<div class="narrative-arcs-page">
+  <h1>Arcos Narrativos</h1>
+
+  <div class="arcs-grid">
+    <!-- Add new arc card -->
+    <div class="arc-card add" (click)="addNarrativeArc()">
+      <div class="plus">+</div>
+      <div>Añadir Arco</div>
+    </div>
+
+    <!-- Existing arcs -->
+    <div class="arc-card flip"
+         *ngFor="let arc of narrativeArcs"
+         [class.flipped]="flippedArcIds.has(arc._id)">
+
+      <div class="flip-inner">
+        <div class="flip-front" (click)="toggleFlip(arc._id)">
+          <img *ngIf="arc.imageUrl" [src]="arc.imageUrl" [alt]="arc.title" />
+          <div *ngIf="!arc.imageUrl" class="no-image-placeholder">
+            <mat-icon>auto_stories</mat-icon>
+          </div>
+        </div>
+
+        <div class="flip-back" (click)="toggleFlip(arc._id)">
+          <div class="arc-title">{{ arc.title }}</div>
+          <div class="arc-actions">
+            <button (click)="viewArcDetails(arc._id); $event.stopPropagation()">
+              Ver Detalles
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

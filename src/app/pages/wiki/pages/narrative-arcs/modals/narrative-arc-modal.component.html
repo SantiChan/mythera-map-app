@@ -1,0 +1,48 @@
+<div mat-dialog-content class="arc-modal__wrapper">
+  <div class="arc-modal__content">
+    <div class="image-preview">
+      <img *ngIf="imagePreview" 
+           [src]="imagePreview" 
+           alt="arc" 
+           class="preview-img" />
+      
+      <div *ngIf="!imagePreview" class="no-image-placeholder">
+        <mat-icon>auto_stories</mat-icon>
+        <p>Sin imagen</p>
+      </div>
+      
+      <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;" />
+      
+      <button mat-icon-button class="icon-btn close-btn" (click)="close()">
+        <mat-icon>close</mat-icon>
+      </button>
+      
+      <button mat-icon-button class="icon-btn edit-image-btn" (click)="fileInput.click()">
+        <mat-icon>{{ imagePreview ? 'edit' : 'add_photo_alternate' }}</mat-icon>
+      </button>
+      
+      <button *ngIf="selectedFile" mat-icon-button class="icon-btn save-image-btn" (click)="confirmImageChange()">
+        <mat-icon>save</mat-icon>
+      </button>
+    </div>
+    
+    <div class="arc-modal__text-wrapper">
+      <h2>{{ data.isNew ? 'Nuevo Arco Narrativo' : 'Editar Arco Narrativo' }}</h2>
+      
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Título</mat-label>
+        <input matInput [(ngModel)]="data.arc.title" />
+      </mat-form-field>
+
+      <div class="editor-wrapper">
+        <label>Descripción</label>
+        <angular-editor [(ngModel)]="data.arc.descriptionHtml" [config]="editorConfig"></angular-editor>
+      </div>
+
+      <div class="arc-modal__actions">
+        <button mat-stroked-button color="warn" type="button" (click)="close()">Cancelar</button>
+        <button mat-stroked-button color="primary" type="button" (click)="save()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

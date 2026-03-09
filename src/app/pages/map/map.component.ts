@@ -12,16 +12,16 @@ import { CreateMarkerToolbarComponent } from '../../shared/components/create-mar
 import { CreatePlacesDTO } from '../../shared/interfaces/places/places.interface';
 
 @Component({
-    selector: 'app-map-test',
-    templateUrl: './map-test.component.html',
-    styleUrls: ['./map-test.component.scss'],
+    selector: 'app-map',
+    templateUrl: './map.component.html',
+    styleUrls: ['./map.component.scss'],
     imports: [
         CommonModule,
         ToolboxComponent,
         CreateMarkerToolbarComponent
     ]
 })
-export class MapTestComponent implements AfterViewInit, OnInit {
+export class MapComponent implements AfterViewInit, OnInit {
     selectedPlacement: MarkerIconInterface | null = null;
     isCreating: boolean = false;
 
@@ -206,7 +206,6 @@ export class MapTestComponent implements AfterViewInit, OnInit {
         this.isCreating = false;
         this.selectedPlacement = null;
 
-        //clean listenner
         this._map.off('click', this._handleMapClick);
     }
 

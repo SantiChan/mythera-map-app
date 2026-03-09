@@ -1,0 +1,252 @@
+.arc-detail {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.arc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  .back-button {
+    color: var(--link-gold);
+  }
+
+  button[mat-stroked-button] {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.arc-image {
+  width: 100%;
+  max-height: 400px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 24px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.arc-content {
+  h1 {
+    color: var(--link-gold);
+    font-size: 36px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--link-gold);
+    padding-bottom: 12px;
+  }
+
+  .arc-description {
+    line-height: 1.8;
+    font-size: 16px;
+    margin-bottom: 48px;
+  }
+}
+
+.sessions-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 2px solid rgba(200, 170, 110, 0.3);
+
+  .sessions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h2 {
+      margin: 0;
+      color: var(--link-gold);
+      font-size: 28px;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+
+  .empty-message {
+    text-align: center;
+    padding: 48px;
+    color: rgba(230, 224, 233, 0.5);
+    font-style: italic;
+    background: rgba(200, 170, 110, 0.05);
+    border-radius: 8px;
+  }
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.session-panel {
+  background: rgba(200, 170, 110, 0.05);
+  border: 1px solid rgba(200, 170, 110, 0.2);
+
+  ::ng-deep {
+    .mat-expansion-panel-header {
+      padding: 16px 24px;
+
+      .mat-expansion-panel-header-title {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+    }
+  }
+
+  .session-icon {
+    color: var(--link-gold);
+  }
+
+  .session-type {
+    font-weight: 600;
+    color: var(--link-gold);
+    font-size: 18px;
+  }
+
+  .session-level {
+    color: rgba(230, 224, 233, 0.7);
+    font-size: 14px;
+  }
+}
+
+.session-content {
+  padding: 16px 0;
+  position: relative;
+}
+
+.session-actions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.session-section {
+  margin-bottom: 32px;
+
+  h3 {
+    color: var(--link-gold);
+    font-size: 20px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(200, 170, 110, 0.2);
+  }
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.player-card {
+  background: rgba(200, 170, 110, 0.08);
+  border: 1px solid rgba(200, 170, 110, 0.2);
+
+  .player-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    mat-icon {
+      color: var(--link-gold);
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .player-name {
+      font-weight: 600;
+      color: var(--link-gold);
+      font-size: 16px;
+    }
+
+    .player-character {
+      color: rgba(230, 224, 233, 0.9);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .player-level {
+      color: rgba(230, 224, 233, 0.7);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+  }
+}
+
+.contents-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.content-card {
+  background: rgba(200, 170, 110, 0.08);
+  border: 1px solid rgba(200, 170, 110, 0.2);
+
+  ::ng-deep {
+    .mat-mdc-card-header {
+      padding: 16px;
+      background: rgba(200, 170, 110, 0.1);
+    }
+
+    .mat-mdc-card-title {
+      color: var(--link-gold);
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
+
+  .content-summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+
+    .summary-section {
+      h4 {
+        color: var(--link-gold);
+        font-size: 14px;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      div {
+        line-height: 1.6;
+        font-size: 14px;
+        color: rgba(230, 224, 233, 0.9);
+      }
+    }
+  }
+}
+
+.empty-session {
+  text-align: center;
+  padding: 32px;
+  color: rgba(230, 224, 233, 0.5);
+  font-style: italic;
+}
+
+::ng-deep {
+  .session-modal-container {
+    .mat-mdc-dialog-container {
+      padding: 0;
+      background: #1e1e1e;
+    }
+  }
+}
