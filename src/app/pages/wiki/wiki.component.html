@@ -1,10 +1,15 @@
 <mat-sidenav-container class="wiki-container">
   <mat-sidenav mode="side" opened class="wiki-sidenav">
     <div class="wiki-header">
-      <button mat-icon-button routerLink="/" class="back-button">
-        <mat-icon>arrow_back</mat-icon>
+      <div style="display: flex; align-items: center; gap: 12px; flex: 1;">
+        <button mat-icon-button routerLink="/" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>Mythera Wiki</h2>
+      </div>
+      <button mat-icon-button aria-label="Cerrar sesión" class="logout-button" (click)="logout()" title="Cerrar Sessión">
+        <mat-icon>logout</mat-icon>
       </button>
-      <h2>Mythera Wiki</h2>
     </div>
 
     <mat-nav-list>

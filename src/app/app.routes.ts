@@ -16,14 +16,18 @@ import { CharactersListComponent } from './pages/wiki/pages/characters/character
 import { FactionsListComponent } from './pages/wiki/pages/factions/factions-list.component';
 import { RulesGalleryComponent } from './pages/wiki/pages/rules/rules-gallery.component';
 import { HistoricalEventsGalleryComponent } from './pages/wiki/pages/historical-events/historical-events-gallery.component';
+import { LoginComponent } from './pages/login/login.component';
+import { authGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
-    { path: '', component: MapComponent },
-    { path: 'place-details/:id', component: PlacesDetailsComponent },
-    { path: 'timeline', component: TimeLineComponent },
+    { path: 'login', component: LoginComponent },
+    { path: '', component: MapComponent, canActivate: [authGuard] },
+    { path: 'place-details/:id', component: PlacesDetailsComponent, canActivate: [authGuard] },
+    { path: 'timeline', component: TimeLineComponent, canActivate: [authGuard] },
     {
         path: 'wiki',
         component: WikiComponent,
+        canActivate: [authGuard],
         children: [
             { path: '', redirectTo: 'arcos-narrativos', pathMatch: 'full' },
             { path: 'arcos-narrativos', component: NarrativeArcsListComponent },

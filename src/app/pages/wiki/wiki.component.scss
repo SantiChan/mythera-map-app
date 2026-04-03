@@ -28,6 +28,14 @@
       font-weight: 500;
       color: var(--link-gold);
     }
+
+    .logout-button {
+      color: #cf6679;
+      flex-shrink: 0;
+      &:hover {
+        background-color: rgba(207, 102, 121, 0.1);
+      }
+    }
   }
 
   mat-nav-list {

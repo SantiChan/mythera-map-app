@@ -10,6 +10,7 @@ import { SelectSizeDialogComponent } from '../select-size-dialog/select-size-dia
 import { MarkerIconInterface } from '../../interfaces/icons/marker-icon.interface';
 import { MarkerIconsPlace } from '../../enums/icons/marker-icons.enum';
 import { MarkerService } from '../../services/marker.service';
+import { AuthService } from '../../../core/auth/auth.service';
 
 @Component({
   selector: 'app-toolbox',
@@ -25,6 +26,7 @@ export class ToolboxComponent {
     private dialog: MatDialog,
     private router: Router,
     private _markerService: MarkerService,
+    private authService: AuthService
   ) {}
 
   openSizeDialog(category: MarkerIconsPlace): void {
@@ -45,5 +47,10 @@ export class ToolboxComponent {
 
   goToWiki(): void {
     this.router.navigate(['/wiki']);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }

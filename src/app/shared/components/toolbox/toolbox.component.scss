@@ -26,6 +26,16 @@
   }
 }
 
+.logout-button {
+  background-color: rgba(207, 102, 121, 0.4) !important;
+  color: #cf6679 !important;
+  
+  &:hover {
+    background-color: #cf6679 !important;
+    color: white !important;
+  }
+}
+
 .toolbox {
   width: 150px;
   background-color: #f4f4f4;
