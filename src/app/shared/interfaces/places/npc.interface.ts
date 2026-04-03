@@ -1,8 +1,9 @@
 export type Npc = {
-  id: string;
+  _id?: string;
+  id?: string;
   name: string;
   title?: string;
-  image?: string;
+  imageUrl?: string;
   descriptionHtml?: string;
   personality?: string;
 };

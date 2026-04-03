@@ -1,0 +1,283 @@
+<div class="wiki-subraces-container">
+    <div class="page-header">
+        <button mat-icon-button class="back-btn" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>Subrazas de {{ raceName }}</h2>
+    </div>
+
+    <div class="entities-grid">
+        <div class="entity-card add" (click)="addNew()">
+            <div class="plus">+</div>
+            <div>Añadir Subraza</div>
+        </div>
+
+        <div class="entity-card" *ngFor="let subrace of subraces" (click)="selectSubrace(subrace)"
+            [class.active]="selectedSubrace?._id === subrace._id">
+            <div class="image-wrapper">
+                <img *ngIf="subrace.imageUrl" [src]="subrace.imageUrl" [alt]="subrace.name">
+                <div *ngIf="!subrace.imageUrl" class="no-image">
+                    <mat-icon>person</mat-icon>
+                </div>
+            </div>
+            <div class="entity-name">{{ subrace.name }}</div>
+        </div>
+    </div>
+
+    <!-- DETAILS VIEW (READ MODE) -->
+    <div class="entity-details" *ngIf="selectedSubrace && !isEditing">
+        <div class="detail-header" style="align-items: flex-start;">
+            <div style="display: flex; gap: 24px; align-items: flex-start; flex: 1;">
+                
+                <div *ngIf="selectedSubrace.imageUrl" style="flex-shrink: 0;">
+                    <img [src]="selectedSubrace.imageUrl" [alt]="selectedSubrace.name" 
+                         style="width: 160px; height: 160px; object-fit: cover; border-radius: 12px; border: 2px solid var(--link-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                </div>
+                
+                <div *ngIf="!selectedSubrace.imageUrl" style="flex-shrink: 0; width: 160px; height: 160px; border-radius: 12px; border: 2px dashed rgba(200, 170, 110, 0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); text-align: center; padding: 16px; box-sizing: border-box;">
+                    <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: rgba(255,255,255,0.2); margin-bottom: 12px;">person</mat-icon>
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.4);">Aún sin imagen</span>
+                </div>
+
+                <div style="padding-top: 8px;">
+                    <h2 style="font-size: 32px; margin-bottom: 4px; color: var(--link-gold);">{{ selectedSubrace.name }}</h2>
+                    <div style="color: rgba(255,255,255,0.6); margin-top: 8px; font-size: 15px; line-height: 1.8;">
+                        Raza Base: <strong style="color: var(--link-gold)">{{ raceName }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button mat-icon-button color="primary" (click)="editSubrace()" matTooltip="Editar">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteSubrace(selectedSubrace)" matTooltip="Eliminar">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedSubrace.description">
+            <h3>Descripción General</h3>
+            <p [innerHTML]="selectedSubrace.description | titlecase" style="line-height: 1.6; color: var(--font-white);"></p>
+        </div>
+
+        <div class="detail-section info-row"
+            *ngIf="selectedSubrace.size || selectedSubrace.age || selectedSubrace.speed || selectedSubrace.language"
+            style="display: flex; flex-wrap: wrap; gap: 24px; background: rgba(0,0,0,0.2); padding: 16px; border-radius: 8px; border: 1px solid rgba(200, 170, 110, 0.2);">
+            <div class="info-item" *ngIf="selectedSubrace.size">
+                <span class="label" style="color: rgba(255,255,255,0.5); font-size: 13px; display: block; margin-bottom: 4px;">Tamaño:</span> 
+                <span class="value" style="color: var(--link-gold); font-size: 15px; font-weight: 500;">{{ selectedSubrace.size }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedSubrace.speed">
+                <span class="label" style="color: rgba(255,255,255,0.5); font-size: 13px; display: block; margin-bottom: 4px;">Velocidad:</span> 
+                <span class="value" style="color: var(--link-gold); font-size: 15px; font-weight: 500;">{{ selectedSubrace.speed }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedSubrace.language">
+                <span class="label" style="color: rgba(255,255,255,0.5); font-size: 13px; display: block; margin-bottom: 4px;">Idioma:</span> 
+                <span class="value" style="color: var(--link-gold); font-size: 15px; font-weight: 500;">{{ selectedSubrace.language }}</span>
+            </div>
+            <div class="info-item" *ngIf="selectedSubrace.age">
+                <span class="label" style="color: rgba(255,255,255,0.5); font-size: 13px; display: block; margin-bottom: 4px;">Edad:</span> 
+                <span class="value" style="color: var(--link-gold); font-size: 15px; font-weight: 500;">{{ selectedSubrace.age }}</span>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedSubrace.stats">
+            <h3>Modificadores de Atributo</h3>
+            <div class="stats-display" style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <div class="stat-box" *ngIf="selectedSubrace.stats.str" style="background: rgba(0,0,0,0.4); border: 1px solid var(--link-gold); padding: 8px 16px; border-radius: 8px; text-align: center;">
+                    <span class="stat-name" style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 4px;">FUE</span>
+                    <span class="stat-value" style="font-size: 18px; font-weight: bold; color: var(--link-gold);">{{ selectedSubrace.stats.str > 0 ? '+' : '' }}{{ selectedSubrace.stats.str }}</span>
+                </div>
+                <div class="stat-box" *ngIf="selectedSubrace.stats.dex" style="background: rgba(0,0,0,0.4); border: 1px solid var(--link-gold); padding: 8px 16px; border-radius: 8px; text-align: center;">
+                    <span class="stat-name" style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 4px;">DES</span>
+                    <span class="stat-value" style="font-size: 18px; font-weight: bold; color: var(--link-gold);">{{ selectedSubrace.stats.dex > 0 ? '+' : '' }}{{ selectedSubrace.stats.dex }}</span>
+                </div>
+                <div class="stat-box" *ngIf="selectedSubrace.stats.con" style="background: rgba(0,0,0,0.4); border: 1px solid var(--link-gold); padding: 8px 16px; border-radius: 8px; text-align: center;">
+                    <span class="stat-name" style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 4px;">CON</span>
+                    <span class="stat-value" style="font-size: 18px; font-weight: bold; color: var(--link-gold);">{{ selectedSubrace.stats.con > 0 ? '+' : '' }}{{ selectedSubrace.stats.con }}</span>
+                </div>
+                <div class="stat-box" *ngIf="selectedSubrace.stats.int" style="background: rgba(0,0,0,0.4); border: 1px solid var(--link-gold); padding: 8px 16px; border-radius: 8px; text-align: center;">
+                    <span class="stat-name" style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 4px;">INT</span>
+                    <span class="stat-value" style="font-size: 18px; font-weight: bold; color: var(--link-gold);">{{ selectedSubrace.stats.int > 0 ? '+' : '' }}{{ selectedSubrace.stats.int }}</span>
+                </div>
+                <div class="stat-box" *ngIf="selectedSubrace.stats.wis" style="background: rgba(0,0,0,0.4); border: 1px solid var(--link-gold); padding: 8px 16px; border-radius: 8px; text-align: center;">
+                    <span class="stat-name" style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 4px;">SAB</span>
+                    <span class="stat-value" style="font-size: 18px; font-weight: bold; color: var(--link-gold);">{{ selectedSubrace.stats.wis > 0 ? '+' : '' }}{{ selectedSubrace.stats.wis }}</span>
+                </div>
+                <div class="stat-box" *ngIf="selectedSubrace.stats.cha" style="background: rgba(0,0,0,0.4); border: 1px solid var(--link-gold); padding: 8px 16px; border-radius: 8px; text-align: center;">
+                    <span class="stat-name" style="display: block; font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 4px;">CAR</span>
+                    <span class="stat-value" style="font-size: 18px; font-weight: bold; color: var(--link-gold);">{{ selectedSubrace.stats.cha > 0 ? '+' : '' }}{{ selectedSubrace.stats.cha }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedSubrace.passiveTraits?.length">
+            <h3>Dotes Pasivas</h3>
+            <ul>
+                <li *ngFor="let trait of selectedSubrace.passiveTraits" style="margin-bottom: 16px; list-style-type: none; margin-left: -20px; background: rgba(0,0,0,0.2); border-left: 3px solid var(--link-gold); padding: 12px 16px;">
+                    <div style="color: var(--link-gold); font-weight: bold; margin-bottom: 4px; font-size: 15px;">{{ trait.title | titlecase }}</div>
+                    <div [innerHTML]="trait.description" style="color: rgba(255,255,255,0.8); line-height: 1.5; font-size: 14px;"></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedSubrace.activeTraits?.length">
+            <h3>Dotes Activas</h3>
+            <ul>
+                <li *ngFor="let trait of selectedSubrace.activeTraits" style="margin-bottom: 16px; list-style-type: none; margin-left: -20px; background: rgba(0,0,0,0.2); border-left: 3px solid #8d6e3c; padding: 12px 16px;">
+                    <div style="color: #8d6e3c; font-weight: bold; margin-bottom: 4px; font-size: 15px;">{{ trait.title | titlecase }}</div>
+                    <div [innerHTML]="trait.description" style="color: rgba(255,255,255,0.8); line-height: 1.5; font-size: 14px;"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- COMPOSE/EDIT MODE -->
+    <div class="entity-details form-mode" *ngIf="selectedSubrace && isEditing">
+        <div class="detail-header" style="justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">
+            <h2 style="font-size: 24px; color: var(--link-gold); margin: 0;">{{ selectedSubrace._id ? 'Editar Subraza' : 'Nueva Subraza' }}</h2>
+            <div class="actions">
+                <button mat-button (click)="cancelEdit()">Cancelar</button>
+                <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">Guardar</button>
+            </div>
+        </div>
+
+        <div class="image-upload-section" style="display: flex; justify-content: center; margin-bottom: 32px;">
+            <div class="image-preview" (click)="fileInput.click()" style="width: 150px; height: 150px; border-radius: 50%; border: 2px dashed var(--link-gold); overflow: hidden; cursor: pointer; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;">
+                <div *ngIf="!imagePreview" class="placeholder" style="display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.5);">
+                    <mat-icon style="font-size: 32px; width: 32px; height: 32px; margin-bottom: 8px;">add_photo_alternate</mat-icon>
+                    <span>Subir Imagen</span>
+                </div>
+            </div>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden>
+        </div>
+
+        <form [formGroup]="form" class="subrace-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Nombre de la Subraza</mat-label>
+                <input matInput formControlName="name" placeholder="Ej: Orco de las Montañas">
+                <mat-error *ngIf="form.get('name')?.hasError('required')">El nombre es obligatorio</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Descripción / Lore</mat-label>
+                <textarea matInput formControlName="description" rows="3" placeholder="Descripción física y cultural..."></textarea>
+            </mat-form-field>
+
+            <div style="display: flex; gap: 16px;">
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Tamaño</mat-label>
+                    <input matInput formControlName="size" placeholder="Ej: Mediano">
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Velocidad</mat-label>
+                    <input matInput formControlName="speed" placeholder="Ej: 30 pies">
+                </mat-form-field>
+            </div>
+            
+            <div style="display: flex; gap: 16px;">
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Edad (Lifespan)</mat-label>
+                    <input matInput formControlName="age" placeholder="Ej: Madurez a los 18, viven 100 años">
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Idioma</mat-label>
+                    <input matInput formControlName="language" placeholder="Ej: Común, Orco">
+                </mat-form-field>
+            </div>
+
+            <!-- Atributos -->
+            <div formGroupName="stats" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <h3 style="color: var(--link-gold); font-size: 16px; margin: 0 0 16px 0;">Modificadores de Atributo</h3>
+                <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px;">
+                    <mat-form-field appearance="outline" style="text-align: center;">
+                        <mat-label>FUE</mat-label>
+                        <input matInput type="number" formControlName="str" placeholder="0">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="text-align: center;">
+                        <mat-label>DES</mat-label>
+                        <input matInput type="number" formControlName="dex" placeholder="0">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="text-align: center;">
+                        <mat-label>CON</mat-label>
+                        <input matInput type="number" formControlName="con" placeholder="0">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="text-align: center;">
+                        <mat-label>INT</mat-label>
+                        <input matInput type="number" formControlName="int" placeholder="0">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="text-align: center;">
+                        <mat-label>SAB</mat-label>
+                        <input matInput type="number" formControlName="wis" placeholder="0">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="text-align: center;">
+                        <mat-label>CAR</mat-label>
+                        <input matInput type="number" formControlName="cha" placeholder="0">
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Dotes Pasivas -->
+            <div formArrayName="passiveTraits" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="color: var(--link-gold); font-size: 16px; margin: 0;">Dotes Pasivas</h3>
+                    <button mat-icon-button color="primary" type="button" (click)="addPassiveTrait()">
+                        <mat-icon>add_circle</mat-icon>
+                    </button>
+                </div>
+                
+                <div *ngFor="let control of passiveTraits.controls; let i=index" [formGroupName]="i" style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px dashed rgba(200,170,110,0.1);">
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Título de Dote Pasiva #{{i + 1}}</mat-label>
+                            <input matInput formControlName="title" placeholder="Ej: Visión en la Oscuridad">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Descripción</mat-label>
+                            <textarea matInput formControlName="description" rows="2" placeholder="Puedes ver en la penumbra..."></textarea>
+                        </mat-form-field>
+                    </div>
+                    <button mat-icon-button color="warn" type="button" (click)="removePassiveTrait(i)" style="margin-top: 8px;">
+                        <mat-icon>remove_circle_outline</mat-icon>
+                    </button>
+                </div>
+                <div *ngIf="passiveTraits.length === 0" style="font-size: 13px; color: rgba(255,255,255,0.4); font-style: italic; margin-bottom: 16px;">Sin dotes pasivas asignadas.</div>
+            </div>
+
+            <!-- Dotes Activas -->
+            <div formArrayName="activeTraits" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="color: var(--link-gold); font-size: 16px; margin: 0;">Dotes Activas</h3>
+                    <button mat-icon-button color="primary" type="button" (click)="addActiveTrait()">
+                        <mat-icon>add_circle</mat-icon>
+                    </button>
+                </div>
+                
+                <div *ngFor="let control of activeTraits.controls; let i=index" [formGroupName]="i" style="display: flex; gap: 12px; align-items: flex-start; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px dashed rgba(200,170,110,0.1);">
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 12px;">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Título de Dote Activa #{{i + 1}}</mat-label>
+                            <input matInput formControlName="title" placeholder="Ej: Furia">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Descripción</mat-label>
+                            <textarea matInput formControlName="description" rows="2" placeholder="Entras en un estado de furia..."></textarea>
+                        </mat-form-field>
+                    </div>
+                    <button mat-icon-button color="warn" type="button" (click)="removeActiveTrait(i)" style="margin-top: 8px;">
+                        <mat-icon>remove_circle_outline</mat-icon>
+                    </button>
+                </div>
+                <div *ngIf="activeTraits.length === 0" style="font-size: 13px; color: rgba(255,255,255,0.4); font-style: italic; margin-bottom: 16px;">Sin dotes activas asignadas.</div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="empty-state" *ngIf="!selectedSubrace && subraces.length > 0">
+        Selecciona una subraza para ver sus atributos o añade una nueva.
+    </div>
+
+</div>

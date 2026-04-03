@@ -47,7 +47,7 @@ export class NpcModalComponent implements OnInit {
 
     ngOnInit(): void {
         this.editMode = this.data.newNpc || false;
-        this.imagePreview = this.data.npc.image || null;
+        this.imagePreview = this.data.npc.imageUrl || null;
     }
 
     onFileSelected(event: any) {
@@ -72,7 +72,7 @@ export class NpcModalComponent implements OnInit {
     }
 
     save() {
-        if (this.data.newNpc && !this.selectedFile && !this.data.npc.image) {
+        if (this.data.newNpc && !this.data.npc.name) {
             return;
         }
 

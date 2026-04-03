@@ -1,0 +1,242 @@
+.wiki-timeline-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+
+    h2 {
+        color: var(--link-gold);
+        font-size: 32px;
+        margin: 0;
+    }
+
+    .actions-group {
+        display: flex;
+        gap: 16px;
+    }
+}
+
+.timeline-wrapper {
+    position: relative;
+
+    // The central vertical line
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 4px;
+        background-color: rgba(200, 170, 110, 0.3);
+        border-radius: 4px;
+        z-index: 0;
+    }
+}
+
+.era-section {
+    position: relative;
+    margin-bottom: 64px;
+    z-index: 1;
+
+    .era-marker {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 48px;
+
+        .era-content {
+            background: var(--surface);
+            border: 2px solid var(--link-gold);
+            padding: 12px 32px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+
+            h3 {
+                color: var(--font-white);
+                margin: 0;
+                font-size: 24px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            }
+
+            .era-actions {
+                display: flex;
+                gap: 4px;
+            }
+        }
+    }
+}
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.timeline-item {
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+
+    .timeline-year {
+        width: 45%;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--font-white);
+    }
+
+    .timeline-dot {
+        width: 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        mat-icon {
+            background-color: var(--surface);
+            color: var(--link-gold);
+            border: 3px solid var(--link-gold);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            font-size: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(200, 170, 110, 0.4);
+        }
+    }
+
+    .timeline-card {
+        width: 45%;
+        background-color: rgba(200, 170, 110, 0.1);
+        border-radius: 12px;
+        border-left: 6px solid var(--link-gold);
+        position: relative;
+        padding: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s;
+
+        // Little arrow pointing to the dot
+        &::before {
+            content: '';
+            position: absolute;
+            top: 24px;
+            border-style: solid;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+
+            h4 {
+                color: var(--link-gold);
+                font-size: 20px;
+                margin: 0;
+            }
+
+            .card-actions {
+                display: flex;
+                gap: 4px;
+                opacity: 0.5;
+                transition: opacity 0.2s;
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                button {
+                    width: 32px;
+                    height: 32px;
+                    padding: 0;
+
+                    mat-icon {
+                        font-size: 20px;
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+        }
+
+        .card-body p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0;
+            line-height: 1.6;
+        }
+    }
+
+    &.right-side {
+        flex-direction: row;
+
+        .timeline-year {
+            text-align: right;
+            padding-right: 24px;
+        }
+
+        .timeline-card {
+            border-left: 6px solid var(--link-gold);
+            border-right: none;
+            margin-left: 24px;
+
+            &::before {
+                left: -12px;
+                border-width: 10px 12px 10px 0;
+                border-color: transparent var(--link-gold) transparent transparent;
+            }
+        }
+    }
+
+    &.left-side {
+        flex-direction: row-reverse;
+
+        .timeline-year {
+            text-align: left;
+            padding-left: 24px;
+        }
+
+        .timeline-card {
+            border-right: 6px solid var(--link-gold);
+            border-left: none;
+            margin-right: 24px;
+            text-align: right;
+
+            .card-header {
+                flex-direction: row-reverse;
+            }
+
+            &::before {
+                right: -12px;
+                border-width: 10px 0 10px 12px;
+                border-color: transparent transparent transparent var(--link-gold);
+            }
+        }
+    }
+}
+
+.empty-message {
+    text-align: center;
+    padding: 48px;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+    background: rgba(200, 170, 110, 0.05);
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+}

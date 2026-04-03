@@ -1,35 +1,104 @@
-<div class="narrative-arcs-page">
-  <h1>Arcos Narrativos</h1>
+<div class="wiki-narrative-arcs-container">
 
-  <div class="arcs-grid">
-    <!-- Add new arc card -->
-    <div class="arc-card add" (click)="addNarrativeArc()">
-      <div class="plus">+</div>
-      <div>Añadir Arco</div>
+    <div class="page-header">
+        <h2>Arcos Narrativos</h2>
     </div>
 
-    <!-- Existing arcs -->
-    <div class="arc-card flip"
-         *ngFor="let arc of narrativeArcs"
-         [class.flipped]="flippedArcIds.has(arc._id)">
-
-      <div class="flip-inner">
-        <div class="flip-front" (click)="toggleFlip(arc._id)">
-          <img *ngIf="arc.imageUrl" [src]="arc.imageUrl" [alt]="arc.title" />
-          <div *ngIf="!arc.imageUrl" class="no-image-placeholder">
-            <mat-icon>auto_stories</mat-icon>
-          </div>
+    <div class="entities-grid">
+        <!-- Añadir Arco Card -->
+        <div class="entity-card add" (click)="addNew()">
+            <div class="plus">+</div>
+            <div>Añadir Arco</div>
         </div>
 
-        <div class="flip-back" (click)="toggleFlip(arc._id)">
-          <div class="arc-title">{{ arc.title }}</div>
-          <div class="arc-actions">
-            <button (click)="viewArcDetails(arc._id); $event.stopPropagation()">
-              Ver Detalles
-            </button>
-          </div>
+        <!-- Lista de Arcos -->
+        <div class="entity-card" *ngFor="let arc of narrativeArcs" (click)="selectArc(arc)"
+            [class.active]="selectedArc?._id === arc._id">
+            <div class="image-wrapper">
+                <img *ngIf="arc.imageUrl" [src]="arc.imageUrl" [alt]="arc.title">
+                <div *ngIf="!arc.imageUrl" class="no-image">
+                    <mat-icon>auto_stories</mat-icon>
+                </div>
+            </div>
+            <div class="entity-name">{{ arc.title }}</div>
         </div>
-      </div>
     </div>
-  </div>
+
+    <!-- DETAILS VIEW (READ MODE) -->
+    <div class="entity-details" *ngIf="selectedArc && !isEditing">
+        <div class="detail-header" style="align-items: flex-start;">
+            <div style="display: flex; gap: 24px; align-items: flex-start; flex: 1;">
+                
+                <div *ngIf="selectedArc.imageUrl" style="flex-shrink: 0;">
+                    <img [src]="selectedArc.imageUrl" [alt]="selectedArc.title" 
+                         style="width: 160px; height: 160px; object-fit: cover; border-radius: 12px; border: 2px solid var(--link-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                </div>
+                
+                <div *ngIf="!selectedArc.imageUrl" style="flex-shrink: 0; width: 160px; height: 160px; border-radius: 12px; border: 2px dashed rgba(200, 170, 110, 0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); text-align: center; padding: 16px; box-sizing: border-box;">
+                    <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: rgba(255,255,255,0.2); margin-bottom: 12px;">auto_stories</mat-icon>
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.4);">Aún sin imagen</span>
+                </div>
+
+                <div style="padding-top: 8px; flex: 1;">
+                    <h2 style="font-size: 32px; margin-bottom: 16px; color: var(--link-gold);">{{ selectedArc.title }}</h2>
+                    <button mat-raised-button color="primary" (click)="viewArcDetails(selectedArc._id)">
+                        <mat-icon>visibility</mat-icon> Ver Partidas
+                    </button>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button mat-icon-button color="primary" (click)="editArc()" matTooltip="Editar">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteArc(selectedArc)" matTooltip="Eliminar">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedArc.descriptionHtml">
+            <h3>Descripción</h3>
+            <div [innerHTML]="selectedArc.descriptionHtml" style="line-height: 1.6; color: var(--font-white);"></div>
+        </div>
+    </div>
+
+    <!-- COMPOSE/EDIT MODE -->
+    <div class="entity-details form-mode" *ngIf="selectedArc && isEditing">
+        <div class="detail-header" style="justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">
+            <h2 style="font-size: 24px; color: var(--link-gold); margin: 0;">{{ selectedArc._id ? 'Editar Arco' : 'Nuevo Arco Narrativo' }}</h2>
+            <div class="actions">
+                <button mat-button (click)="cancelEdit()">Cancelar</button>
+                <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">Guardar</button>
+            </div>
+        </div>
+
+        <div class="image-upload-section" style="display: flex; justify-content: center; margin-bottom: 32px;">
+            <div class="image-preview" (click)="fileInput.click()" style="width: 150px; height: 150px; border-radius: 50%; border: 2px dashed var(--link-gold); overflow: hidden; cursor: pointer; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;">
+                <div *ngIf="!imagePreview" class="placeholder" style="display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.5);">
+                    <mat-icon style="font-size: 32px; width: 32px; height: 32px; margin-bottom: 8px;">add_photo_alternate</mat-icon>
+                    <span>Subir Imagen</span>
+                </div>
+            </div>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden>
+        </div>
+
+        <form [formGroup]="form" class="arc-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Título del Arco</mat-label>
+                <input matInput formControlName="title" placeholder="Ej: La Caída de Xoroth">
+                <mat-error *ngIf="form.get('title')?.hasError('required')">El título es obligatorio</mat-error>
+            </mat-form-field>
+
+            <div class="editor-wrapper" style="margin-top: 8px;">
+                <label style="display: block; margin-bottom: 8px; color: var(--link-gold); font-size: 14px;">Descripción</label>
+                <angular-editor formControlName="descriptionHtml" [config]="editorConfig"></angular-editor>
+            </div>
+        </form>
+    </div>
+
+    <div class="empty-state" *ngIf="!selectedArc && narrativeArcs.length > 0">
+        Selecciona un arco narrativo para ver sus detalles o añade uno nuevo.
+    </div>
+
 </div>

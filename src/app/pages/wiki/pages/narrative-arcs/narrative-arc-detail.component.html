@@ -3,10 +3,6 @@
     <button mat-icon-button class="back-button" (click)="goBack()">
       <mat-icon>arrow_back</mat-icon>
     </button>
-    <button mat-stroked-button color="primary" (click)="editArc()">
-      <mat-icon>edit</mat-icon>
-      Editar Arco
-    </button>
   </div>
 
   <div class="arc-image" *ngIf="arc.imageUrl">
@@ -21,15 +17,105 @@
   <div class="sessions-section">
     <div class="sessions-header">
       <h2>Partidas</h2>
-      <button mat-raised-button color="primary" (click)="addSession()">
+      <button mat-raised-button color="primary" (click)="addSession()" *ngIf="editingSessionId !== 'new'">
         <mat-icon>add</mat-icon>
         Añadir Partida
       </button>
     </div>
 
+    <!-- NEW SESSION FORM -->
+    <div class="session-form-container new-session" *ngIf="editingSessionId === 'new'" style="background: rgba(0,0,0,0.3); border: 1px solid var(--link-gold); border-radius: 8px; padding: 24px; margin-bottom: 24px;">
+        <h3 style="color: var(--link-gold); margin-top: 0; margin-bottom: 16px;">Nueva Partida</h3>
+        
+        <form [formGroup]="sessionForm" class="session-form">
+            <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                <mat-form-field appearance="outline" style="flex: 2;">
+                    <mat-label>Título de la Partida</mat-label>
+                    <input matInput formControlName="title" placeholder="Ej: El Despertar del Dragón">
+                    <mat-error *ngIf="sessionForm.get('title')?.hasError('required')">El título es requerido</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Tipo</mat-label>
+                    <mat-select formControlName="type">
+                        <mat-option *ngFor="let type of sessionTypes" [value]="type">{{ type }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Nivel de Inicio</mat-label>
+                    <input matInput type="number" formControlName="startLevel" min="1" max="20" placeholder="Ej: 3">
+                    <mat-error *ngIf="sessionForm.get('startLevel')?.hasError('required')">Requerido</mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- PLAYERS SECTION -->
+            <div formArrayName="players" class="form-section">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 16px;">
+                    <h4 style="color: var(--link-gold); margin: 0;">Jugadores</h4>
+                    <button mat-stroked-button type="button" (click)="addPlayer()"><mat-icon>add</mat-icon> Añadir Jugador</button>
+                </div>
+
+                <div *ngFor="let player of players.controls; let i=index" [formGroupName]="i" style="display: flex; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                    <mat-form-field appearance="outline" style="flex: 1;">
+                        <mat-label>Nombre Jugador</mat-label>
+                        <input matInput formControlName="name">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="flex: 1;">
+                        <mat-label>Nombre Personaje</mat-label>
+                        <input matInput formControlName="character">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100px;">
+                        <mat-label>Nivel</mat-label>
+                        <input matInput type="number" formControlName="level">
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" type="button" (click)="removePlayer(i)" style="margin-top: 8px;">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTENTS SECTION -->
+            <div formArrayName="contents" class="form-section">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 16px;">
+                    <h4 style="color: var(--link-gold); margin: 0;">Sesiones / Contenido</h4>
+                    <button mat-stroked-button type="button" (click)="addContent()"><mat-icon>add</mat-icon> Añadir Sesión</button>
+                </div>
+
+                <div *ngFor="let content of contents.controls; let i=index" [formGroupName]="i" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; padding: 16px; background: rgba(0,0,0,0.2); border-radius: 8px; position: relative;">
+                    <button mat-icon-button color="warn" type="button" (click)="removeContent(i)" style="position: absolute; right: 8px; top: 8px; z-index: 10;">
+                        <mat-icon>close</mat-icon>
+                    </button>
+
+                    <mat-form-field appearance="outline" style="width: 100%; margin-right: 48px;">
+                        <mat-label>Título de Sesión</mat-label>
+                        <input matInput formControlName="title" placeholder="Ej: Sesión 1 - El inicio">
+                    </mat-form-field>
+
+                    <div class="editor-row" style="display: flex; gap: 16px;">
+                        <div class="editor-container" style="flex: 1;">
+                            <label style="display: block; color: var(--link-gold); margin-bottom: 8px; font-size: 13px;">Resumen Inicial (Lo que pasó antes)</label>
+                            <angular-editor formControlName="initialSummary" [config]="editorConfig"></angular-editor>
+                        </div>
+                        <div class="editor-container" style="flex: 1;">
+                            <label style="display: block; color: var(--link-gold); margin-bottom: 8px; font-size: 13px;">Resumen Final (Lo que pasó durante)</label>
+                            <angular-editor formControlName="finalSummary" [config]="editorConfig"></angular-editor>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <button mat-button (click)="cancelEditSession()">Cancelar</button>
+                <button mat-raised-button color="primary" [disabled]="sessionForm.invalid" (click)="saveSession()">Guardar Partida</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- SESSIONS LIST -->
     <div class="sessions-list" *ngIf="arc.sessions && arc.sessions.length > 0">
-      <mat-expansion-panel *ngFor="let session of arc.sessions" class="session-panel">
-        <mat-expansion-panel-header>
+      <mat-expansion-panel *ngFor="let session of arc.sessions" class="session-panel" [expanded]="editingSessionId === session._id">
+        <mat-expansion-panel-header *ngIf="editingSessionId !== session._id">
           <mat-panel-title>
             <mat-icon class="session-icon">{{ session.type === 'Campaña' ? 'campaign' : session.type === 'Quest' ?
               'explore' : 'event' }}</mat-icon>
@@ -39,12 +125,13 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
 
-        <div class="session-content">
+        <!-- READ MODE SESSION -->
+        <div class="session-content" *ngIf="editingSessionId !== session._id">
           <div class="session-actions">
-            <button mat-icon-button color="primary" (click)="editSession(session)" matTooltip="Editar">
+            <button mat-icon-button color="primary" (click)="editSession(session); $event.stopPropagation()" matTooltip="Editar">
               <mat-icon>edit</mat-icon>
             </button>
-            <button mat-icon-button color="warn" (click)="deleteSession(session._id)" matTooltip="Eliminar">
+            <button mat-icon-button color="warn" (click)="deleteSession(session._id); $event.stopPropagation()" matTooltip="Eliminar">
               <mat-icon>delete</mat-icon>
             </button>
           </div>
@@ -97,6 +184,95 @@
             class="empty-session">
             No hay información adicional para esta partida
           </div>
+        </div>
+
+        <!-- EDIT MODE SESSION -->
+        <div class="session-form-container" *ngIf="editingSessionId === session._id" style="padding: 16px 0;">
+            <h3 style="color: var(--link-gold); margin-top: 0; margin-bottom: 16px;">Editar Partida</h3>
+            
+            <form [formGroup]="sessionForm" class="session-form">
+                <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                    <mat-form-field appearance="outline" style="flex: 2;">
+                        <mat-label>Título de la Partida</mat-label>
+                        <input matInput formControlName="title" placeholder="Ej: El Despertar del Dragón">
+                        <mat-error *ngIf="sessionForm.get('title')?.hasError('required')">El título es requerido</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" style="flex: 1;">
+                        <mat-label>Tipo</mat-label>
+                        <mat-select formControlName="type">
+                            <mat-option *ngFor="let type of sessionTypes" [value]="type">{{ type }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" style="flex: 1;">
+                        <mat-label>Nivel de Inicio</mat-label>
+                        <input matInput type="number" formControlName="startLevel" min="1" max="20" placeholder="Ej: 3">
+                        <mat-error *ngIf="sessionForm.get('startLevel')?.hasError('required')">Requerido</mat-error>
+                    </mat-form-field>
+                </div>
+
+                <!-- PLAYERS SECTION -->
+                <div formArrayName="players" class="form-section">
+                    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 16px;">
+                        <h4 style="color: var(--link-gold); margin: 0;">Jugadores</h4>
+                        <button mat-stroked-button type="button" (click)="addPlayer()"><mat-icon>add</mat-icon> Añadir Jugador</button>
+                    </div>
+
+                    <div *ngFor="let player of players.controls; let i=index" [formGroupName]="i" style="display: flex; gap: 12px; margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px dashed rgba(255,255,255,0.1);">
+                        <mat-form-field appearance="outline" style="flex: 1;">
+                            <mat-label>Nombre Jugador</mat-label>
+                            <input matInput formControlName="name">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="flex: 1;">
+                            <mat-label>Nombre Personaje</mat-label>
+                            <input matInput formControlName="character">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100px;">
+                            <mat-label>Nivel</mat-label>
+                            <input matInput type="number" formControlName="level">
+                        </mat-form-field>
+                        <button mat-icon-button color="warn" type="button" (click)="removePlayer(i)" style="margin-top: 8px;">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CONTENTS SECTION -->
+                <div formArrayName="contents" class="form-section">
+                    <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 16px;">
+                        <h4 style="color: var(--link-gold); margin: 0;">Sesiones / Contenido</h4>
+                        <button mat-stroked-button type="button" (click)="addContent()"><mat-icon>add</mat-icon> Añadir Sesión</button>
+                    </div>
+
+                    <div *ngFor="let content of contents.controls; let i=index" [formGroupName]="i" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; padding: 16px; background: rgba(0,0,0,0.2); border-radius: 8px; position: relative;">
+                        <button mat-icon-button color="warn" type="button" (click)="removeContent(i)" style="position: absolute; right: 8px; top: 8px; z-index: 10;">
+                            <mat-icon>close</mat-icon>
+                        </button>
+
+                        <mat-form-field appearance="outline" style="width: 100%; margin-right: 48px;">
+                            <mat-label>Título de Sesión</mat-label>
+                            <input matInput formControlName="title" placeholder="Ej: Sesión 1 - El inicio">
+                        </mat-form-field>
+
+                        <div class="editor-row" style="display: flex; gap: 16px;">
+                            <div class="editor-container" style="flex: 1;">
+                                <label style="display: block; color: var(--link-gold); margin-bottom: 8px; font-size: 13px;">Resumen Inicial (Lo que pasó antes)</label>
+                                <angular-editor formControlName="initialSummary" [config]="editorConfig"></angular-editor>
+                            </div>
+                            <div class="editor-container" style="flex: 1;">
+                                <label style="display: block; color: var(--link-gold); margin-bottom: 8px; font-size: 13px;">Resumen Final (Lo que pasó durante)</label>
+                                <angular-editor formControlName="finalSummary" [config]="editorConfig"></angular-editor>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="display: flex; justify-content: flex-end; gap: 16px; margin-top: 24px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                    <button mat-button (click)="cancelEditSession()">Cancelar</button>
+                    <button mat-raised-button color="primary" [disabled]="sessionForm.invalid" (click)="saveSession()">Guardar Cambios</button>
+                </div>
+            </form>
         </div>
       </mat-expansion-panel>
     </div>

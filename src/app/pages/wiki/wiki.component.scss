@@ -43,7 +43,7 @@
     &::ng-deep .mat-expansion-panel-header {
       padding: 0 16px;
       height: 48px;
-      
+
       &:hover {
         background-color: rgba(200, 170, 110, 0.1);
       }
@@ -89,7 +89,7 @@
 
     mat-icon {
       color: rgba(200, 170, 110, 0.7) !important;
-      margin: 0 !important;
+      margin: 0 12px 0 0 !important;
       width: 24px !important;
       height: 24px !important;
       font-size: 24px !important;
@@ -109,9 +109,9 @@
     }
 
     &.active {
-      background-color: rgba(200, 170, 110, 0.2) !important;
+      background-color: rgba(200, 170, 110, 0.06) !important;
       border-left: 3px solid var(--link-gold) !important;
-      
+
       mat-icon {
         color: var(--link-gold) !important;
       }

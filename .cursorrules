@@ -1,0 +1,28 @@
+# Mythera Map App - AI Context & Guidelines
+
+## 🚀 Tech Stack
+- **Framework:** Angular 19 (Standalone Components Architecture)
+- **UI Components:** Angular Material (v19)
+- **Styling:** SCSS & Vanilla CSS (No Tailwind by default unless configured)
+- **Maps:** Leaflet & Mapbox-GL
+- **Drawing/Canvas:** Konva
+- **Rich Text Editor:** `@kolkov/angular-editor`
+- **Reactivity:** RxJS & Angular Signals
+
+## 🏗️ Architecture & Best Practices
+- **Standalone Components:** The app uses modern Angular Standalone features. Avoid `ngModule` unless integrating legacy libraries.
+- **Modern Syntax:** Force the use of Angular modern Control Flow (`@if`, `@for`, `@empty`, `@switch`) instead of structural directives (`*ngIf`, `*ngFor`).
+- **Folder Structure:**
+  - `src/app/pages/`: Contains all route-level feature pages (e.g., wiki, map, races).
+  - `src/app/shared/`: Shared components, services, pipes, and interfaces.
+- **Routing:** Handled in `app.routes.ts`. Prefer lazy loading for major features (`loadComponent` or `loadChildren`).
+
+## 🤖 AI Assistant Rules
+- **State Management:** Prioritize using Angular Signals (`signal`, `computed`, `effect`) for synchronous component state, and RxJS for async data streams and HTTP requests.
+- **Cleanup:** Always clean up Observables using `takeUntilDestroyed()` or `DestroyRef` to prevent memory leaks.
+- **Type Safety:** Write strict TypeScript. Define interfaces for all entities (`Subrace`, `Race`, `NarrativeArc`, etc.) in `shared/interfaces` or near the feature.
+- **UI Consistency:** Rely on Angular Material components (`mat-card`, `mat-button`, `mat-dialog`, etc.) to match the existing design system. Avoid writing custom CSS for things Material already solves.
+- **Imports:** Keep imports organized. Use relative paths correctly.
+- **Context Awareness & Updates:** Siempre que modifiques significativamente un feature (página/componente), revisa su archivo `CONTEXT.md`. Si tus cambios alteran la arquitectura, reglas de negocio o funcionamiento, **debes actualizar el `CONTEXT.md`** proactivamente para mantenerlo sincronizado.
+- **Adaptive Code Style:** Si el usuario hace una sugerencia sobre estilos de código, refactorización o patrones durante la conversación, adapta ese estilo para el resto de la sesión y añádelo permanentemente a estas reglas (`.cursorrules`) si aplica globalmente.
+- **Test Scripts Cleanup:** Cuando crees un script temporal de prueba o testeo (ej. para verificar estado de base de datos o APIs), **siempre bórralo** del entorno de trabajo una vez que hayas terminado de utilizarlo.

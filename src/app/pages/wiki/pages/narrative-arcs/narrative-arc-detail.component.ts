@@ -6,10 +6,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormBuilder, FormGroup, FormArray, Validators, ReactiveFormsModule } from '@angular/forms';
+import { AngularEditorModule, AngularEditorConfig } from '@kolkov/angular-editor';
 import { NarrativeArcsService } from '../../../../shared/services/wiki/narrative-arcs.service';
 import { SnackbarService } from '../../../../shared/services/snackbar.service';
-import { NarrativeArcModalComponent } from './modals/narrative-arc-modal.component';
-import { SessionModalComponent } from './modals/session-modal.component';
 import { ConfirmModalComponent } from './modals/confirm-modal.component';
 
 @Component({
@@ -20,7 +24,13 @@ import { ConfirmModalComponent } from './modals/confirm-modal.component';
     MatButtonModule,
     MatIconModule,
     MatCardModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatTooltipModule,
+    ReactiveFormsModule,
+    AngularEditorModule
   ],
   templateUrl: './narrative-arc-detail.component.html',
   styleUrls: ['./narrative-arc-detail.component.scss']
@@ -29,11 +39,27 @@ export class NarrativeArcDetailComponent implements OnInit {
   arcId: string = '';
   arc: any = null;
   editingSessionId: string | null = null;
+  
+  sessionForm!: FormGroup;
+  sessionTypes = ['Campaña', 'Quest', 'Oneshot', 'Bishot'];
+
+  editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: true,
+    height: '150px',
+    minHeight: '100px',
+    placeholder: 'Escribe aquí...',
+    translate: 'no',
+    defaultParagraphSeparator: 'p',
+    defaultFontName: 'Arial',
+    toolbarHiddenButtons: [['insertImage', 'insertVideo']],
+  };
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private dialog: MatDialog,
+    private fb: FormBuilder,
     private narrativeArcsService: NarrativeArcsService,
     private snackbar: SnackbarService
   ) { }
@@ -46,7 +72,6 @@ export class NarrativeArcDetailComponent implements OnInit {
   loadArcDetails() {
     this.narrativeArcsService.getById(this.arcId).subscribe({
       next: (arc) => {
-        console.log("arco", arc)
         this.arc = arc;
       },
       error: (err) => {
@@ -61,82 +86,109 @@ export class NarrativeArcDetailComponent implements OnInit {
     this.router.navigate(['/wiki/arcos-narrativos']);
   }
 
-  editArc() {
-    const ref = this.dialog.open(NarrativeArcModalComponent, {
-      width: '800px',
-      maxWidth: '95vw',
-      maxHeight: '95vh',
-      panelClass: 'arc-modal-container',
-      data: {
-        isNew: false,
-        arc: JSON.parse(JSON.stringify(this.arc))
-      }
+  // --- Session Form methods --- //
+  initSessionForm(session?: any) {
+    this.sessionForm = this.fb.group({
+      title: [session?.title || '', Validators.required],
+      type: [session?.type || 'Campaña', Validators.required],
+      startLevel: [session?.startLevel || '', Validators.required],
+      players: this.fb.array([]),
+      contents: this.fb.array([])
     });
 
-    ref.afterClosed().subscribe((result: any) => {
-      if (!result) return;
+    if (session?.players?.length) {
+      session.players.forEach((player: any) => this.addPlayer(player));
+    }
 
-      this.narrativeArcsService.update(this.arcId, result.arc, result.file).subscribe({
-        next: (response) => {
-          this.arc = response.arc;
-          this.snackbar.success('Arco narrativo actualizado');
-        },
-        error: (err) => {
-          console.error(err);
-          this.snackbar.error('Error al actualizar arco narrativo');
-        }
-      });
+    if (session?.contents?.length) {
+      session.contents.forEach((content: any) => this.addContent(content));
+    }
+  }
+
+  get players(): FormArray {
+    return this.sessionForm.get('players') as FormArray;
+  }
+
+  get contents(): FormArray {
+    return this.sessionForm.get('contents') as FormArray;
+  }
+
+  createPlayerGroup(player?: any): FormGroup {
+    return this.fb.group({
+      name: [player?.name || '', Validators.required],
+      character: [player?.character || '', Validators.required],
+      level: [player?.level || 1, [Validators.required, Validators.min(1)]]
     });
   }
 
-  addSession() {
-    const ref = this.dialog.open(SessionModalComponent, {
-      width: '900px',
-      maxWidth: '95vw',
-      maxHeight: '95vh',
-      panelClass: 'session-modal-container',
-      data: {}
+  createContentGroup(content?: any): FormGroup {
+    return this.fb.group({
+      title: [content?.title || '', Validators.required],
+      initialSummary: [content?.initialSummary || '', Validators.required],
+      finalSummary: [content?.finalSummary || '', Validators.required]
     });
+  }
 
-    ref.afterClosed().subscribe((sessionData: any) => {
-      if (!sessionData) return;
+  addPlayer(player?: any) {
+    this.players.push(this.createPlayerGroup(player));
+  }
 
+  removePlayer(index: number) {
+    this.players.removeAt(index);
+  }
+
+  addContent(content?: any) {
+    this.contents.push(this.createContentGroup(content));
+  }
+
+  removeContent(index: number) {
+    this.contents.removeAt(index);
+  }
+
+  addSession() {
+    this.editingSessionId = 'new';
+    this.initSessionForm();
+  }
+
+  editSession(session: any) {
+    this.editingSessionId = session._id;
+    this.initSessionForm(session);
+  }
+
+  cancelEditSession() {
+    this.editingSessionId = null;
+  }
+
+  saveSession() {
+    if (this.sessionForm.invalid) return;
+
+    const sessionData = this.sessionForm.value;
+
+    if (this.editingSessionId === 'new') {
       this.narrativeArcsService.addSession(this.arcId, sessionData).subscribe({
         next: (response) => {
           this.loadArcDetails();
           this.snackbar.success('Partida añadida');
+          this.editingSessionId = null;
         },
         error: (err) => {
           console.error(err);
           this.snackbar.error('Error al añadir partida');
         }
       });
-    });
-  }
-
-  editSession(session: any) {
-    const ref = this.dialog.open(SessionModalComponent, {
-      width: '900px',
-      maxWidth: '95vw',
-      maxHeight: '95vh',
-      panelClass: 'session-modal-container',
-      data: { session: JSON.parse(JSON.stringify(session)) }
-    });
-
-    ref.afterClosed().subscribe((sessionData: any) => {
-      if (!sessionData) return;
-
-      this.narrativeArcsService.updateSession(this.arcId, session._id, sessionData).subscribe({
+    } else if (this.editingSessionId) {
+      this.narrativeArcsService.updateSession(this.arcId, this.editingSessionId, sessionData).subscribe({
         next: (response) => {
           this.loadArcDetails();
           this.snackbar.success('Partida actualizada');
+          this.editingSessionId = null;
         },
         error: (err) => {
           console.error(err);
           this.snackbar.error('Error al actualizar partida');
         }
       });
-    });
+    }
   }
 
   deleteSession(sessionId: string) {
@@ -154,6 +206,7 @@ export class NarrativeArcDetailComponent implements OnInit {
           next: () => {
             this.loadArcDetails();
             this.snackbar.success('Partida eliminada');
+            if (this.editingSessionId === sessionId) this.editingSessionId = null;
           },
           error: (err) => {
             console.error(err);
@@ -162,13 +215,5 @@ export class NarrativeArcDetailComponent implements OnInit {
         });
       }
     });
-  }
-
-  toggleEditMode(sessionId: string) {
-    this.editingSessionId = this.editingSessionId === sessionId ? null : sessionId;
-  }
-
-  isEditing(sessionId: string): boolean {
-    return this.editingSessionId === sessionId;
   }
 }

@@ -528,7 +528,8 @@ export class PlacesDetailsComponent implements OnInit {
     this.resetArmyForm();
   }
 
-  toggleFlip(npcId: string) {
+  toggleFlip(npcId?: string) {
+    if (!npcId) return;
     if (this.flippedNpcIds.has(npcId)) this.flippedNpcIds.delete(npcId);
     else this.flippedNpcIds.add(npcId);
   }
@@ -538,7 +539,7 @@ export class PlacesDetailsComponent implements OnInit {
     if (card.type !== 'npcs') return;
 
     const newNpc: Npc = {
-      id: (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`),
+      _id: (globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`),
       name: '',
       title: '',
       descriptionHtml: '<p></p>',
@@ -592,7 +593,7 @@ export class PlacesDetailsComponent implements OnInit {
 
         this.placeService.updateNpc(this.placeId, npcData._id, npcData, file).subscribe({
           next: (updated) => {
-            const idx = card.npcs.findIndex(x => x.id === npc.id);
+            const idx = card.npcs.findIndex(x => (x._id || x.id) === (npc._id || npc.id));
             if (idx >= 0) {
               card.npcs[idx] = updated;
             }

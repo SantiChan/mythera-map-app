@@ -1,0 +1,117 @@
+<div class="wiki-eternals-container">
+
+    <div class="page-header">
+        <h2>Eternos</h2>
+    </div>
+
+    <div class="entities-grid">
+        <!-- Añadir Eterno Card -->
+        <div class="entity-card add" (click)="addNew()">
+            <div class="plus">+</div>
+            <div>Añadir Eterno</div>
+        </div>
+
+        <!-- Lista de Eternos -->
+        <div class="entity-card" *ngFor="let eternal of eternals" (click)="selectEternal(eternal)"
+            [class.active]="selectedEternal?._id === eternal._id">
+            <div class="image-wrapper">
+                <img *ngIf="eternal.imageUrl" [src]="eternal.imageUrl" [alt]="eternal.name">
+                <div *ngIf="!eternal.imageUrl" class="no-image">
+                    <mat-icon>account_circle</mat-icon>
+                </div>
+            </div>
+            <div class="entity-name">{{ eternal.name }}</div>
+        </div>
+    </div>
+
+    <!-- DETAILS VIEW (READ MODE) -->
+    <div class="entity-details" *ngIf="selectedEternal && !isEditing">
+        <div class="detail-header" style="align-items: flex-start;">
+            <div style="display: flex; gap: 24px; align-items: flex-start; flex: 1;">
+                
+                <div *ngIf="selectedEternal.imageUrl" style="flex-shrink: 0;">
+                    <img [src]="selectedEternal.imageUrl" [alt]="selectedEternal.name" 
+                         style="width: 160px; height: 160px; object-fit: cover; border-radius: 12px; border: 2px solid var(--link-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                </div>
+                
+                <div *ngIf="!selectedEternal.imageUrl" style="flex-shrink: 0; width: 160px; height: 160px; border-radius: 12px; border: 2px dashed rgba(200, 170, 110, 0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); text-align: center; padding: 16px; box-sizing: border-box;">
+                    <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: rgba(255,255,255,0.2); margin-bottom: 12px;">account_circle</mat-icon>
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.4);">Aún sin imagen</span>
+                </div>
+
+                <div style="padding-top: 8px;">
+                    <h2 style="font-size: 32px; margin-bottom: 4px; color: var(--link-gold);">{{ selectedEternal.name }}</h2>
+                    <div style="color: rgba(255,255,255,0.6); margin-top: 8px; font-size: 15px; line-height: 1.8;">
+                        Apodos: <strong style="color: var(--link-gold)">{{ selectedEternal.nickname || 'Ninguno' }}</strong><br>
+                        Presencia: <strong style="color: var(--link-gold)">{{ selectedEternal.presence || 'Desconocido' }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button mat-icon-button color="primary" (click)="editEternal()" matTooltip="Editar">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteEternal(selectedEternal)" matTooltip="Eliminar">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedEternal.legend">
+            <h3>Leyenda</h3>
+            <p [innerHTML]="selectedEternal.legend | titlecase" style="line-height: 1.6; color: var(--font-white);"></p>
+        </div>
+    </div>
+
+    <!-- COMPOSE/EDIT MODE -->
+    <div class="entity-details form-mode" *ngIf="selectedEternal && isEditing">
+        <div class="detail-header" style="justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">
+            <h2 style="font-size: 24px; color: var(--link-gold); margin: 0;">{{ selectedEternal._id ? 'Editar Eterno' : 'Nuevo Eterno' }}</h2>
+            <div class="actions">
+                <button mat-button (click)="cancelEdit()">Cancelar</button>
+                <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">Guardar</button>
+            </div>
+        </div>
+
+        <div class="image-upload-section" style="display: flex; justify-content: center; margin-bottom: 32px;">
+            <div class="image-preview" (click)="fileInput.click()" style="width: 150px; height: 150px; border-radius: 50%; border: 2px dashed var(--link-gold); overflow: hidden; cursor: pointer; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;">
+                <div *ngIf="!imagePreview" class="placeholder" style="display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.5);">
+                    <mat-icon style="font-size: 32px; width: 32px; height: 32px; margin-bottom: 8px;">add_photo_alternate</mat-icon>
+                    <span>Subir Imagen</span>
+                </div>
+            </div>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden>
+        </div>
+
+        <form [formGroup]="form" class="god-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; gap: 16px;">
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Nombre del Eterno</mat-label>
+                    <input matInput formControlName="name" placeholder="Ej: Kronos">
+                    <mat-error *ngIf="form.get('name')?.hasError('required')">El nombre es obligatorio</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Apodo(s)</mat-label>
+                    <input matInput formControlName="nickname" placeholder="Ej: El Tejedor del Tiempo">
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Presencia</mat-label>
+                <input matInput formControlName="presence" placeholder="Ej: En los susurros del viento">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Leyenda</mat-label>
+                <textarea matInput formControlName="legend" rows="5" placeholder="Historia o leyenda del eterno..."></textarea>
+            </mat-form-field>
+        </form>
+    </div>
+
+    <div class="empty-state" *ngIf="!selectedEternal && eternals.length > 0">
+        Selecciona un eterno para ver sus detalles o añade uno nuevo.
+    </div>
+
+</div>

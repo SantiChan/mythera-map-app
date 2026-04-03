@@ -1,0 +1,212 @@
+<div class="wiki-characters-container">
+
+    <div class="page-header">
+        <h2>Personajes</h2>
+    </div>
+
+    <div class="entities-grid">
+        <!-- Añadir Personaje Card -->
+        <div class="entity-card add" (click)="addNew()">
+            <div class="plus">+</div>
+            <div>Añadir Personaje</div>
+        </div>
+
+        <!-- Lista de Personajes -->
+        <div class="entity-card" *ngFor="let character of characters" (click)="selectCharacter(character)"
+            [class.active]="selectedCharacter?._id === character._id">
+            <div class="image-wrapper">
+                <img *ngIf="character.imageUrl" [src]="character.imageUrl" [alt]="character.characterName">
+                <div *ngIf="!character.imageUrl" class="no-image">
+                    <mat-icon>person</mat-icon>
+                </div>
+            </div>
+            <div class="entity-name">{{ character.characterName || 'Desconocido' }}</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px;">Jugador: {{ character.playerName }}</div>
+        </div>
+    </div>
+
+    <!-- DETAILS VIEW (READ MODE) -->
+    <div class="entity-details" *ngIf="selectedCharacter && !isEditing">
+        <div class="detail-header" style="align-items: flex-start;">
+            <div style="display: flex; gap: 24px; align-items: flex-start; flex: 1;">
+                
+                <!-- Character Image -->
+                <div *ngIf="selectedCharacter.imageUrl" style="flex-shrink: 0;">
+                    <img [src]="selectedCharacter.imageUrl" [alt]="selectedCharacter.characterName" 
+                         style="width: 160px; height: 160px; object-fit: cover; border-radius: 12px; border: 2px solid var(--link-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                </div>
+                
+                <!-- Image Placeholder -->
+                <div *ngIf="!selectedCharacter.imageUrl" style="flex-shrink: 0; width: 160px; height: 160px; border-radius: 12px; border: 2px dashed rgba(200, 170, 110, 0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); text-align: center; padding: 16px; box-sizing: border-box;">
+                    <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: rgba(255,255,255,0.2); margin-bottom: 12px;">portrait</mat-icon>
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.4);">Aún sin imagen</span>
+                </div>
+
+                <!-- Info -->
+                <div style="padding-top: 8px;">
+                    <h2 style="font-size: 28px; margin-bottom: 4px;">{{ selectedCharacter.characterName || selectedCharacter.playerName }}</h2>
+                    <div style="color: rgba(255,255,255,0.6); margin-top: 8px; font-size: 15px; line-height: 1.8;">
+                        Jugador: <strong style="color: var(--link-gold)">{{ selectedCharacter.playerName }}</strong><br>
+                        Subraza: <strong style="color: var(--link-gold)">{{ selectedCharacter.subraceId?.name || 'Desconocida' }}</strong><br>
+                        Lugar Actual: <strong style="color: var(--link-gold)">{{ selectedCharacter.currentPlaceId?.name || 'Desconocido' }}</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button mat-icon-button color="primary" (click)="editCharacter()" matTooltip="Editar">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteCharacter(selectedCharacter)" matTooltip="Eliminar">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedCharacter.deitiesIds?.length > 0">
+            <h3>Deidades</h3>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <span *ngFor="let deity of selectedCharacter.deitiesIds" 
+                      style="background: rgba(200, 170, 110, 0.2); border: 1px solid var(--link-gold); padding: 4px 12px; border-radius: 16px; font-size: 13px; color: var(--link-gold);">
+                    {{ deity.name }}
+                </span>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedCharacter.backstory">
+            <h3>Trasfondo en Creación</h3>
+            <p [innerHTML]="selectedCharacter.backstory"></p>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedCharacter.eventsAndAchievements?.length > 0">
+            <h3>Actualización de Eventos y Logros</h3>
+            <ul>
+                <li *ngFor="let event of selectedCharacter.eventsAndAchievements" class="trait-item"
+                    style="margin-bottom: 12px; list-style-type: none; margin-left: -20px;">
+                    <div [innerHTML]="event" style="color: var(--font-white); opacity: 0.9; line-height: 1.5;"></div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedCharacter.plotItems?.length > 0">
+            <h3>Objetos de Trama</h3>
+            <ul>
+                <li *ngFor="let item of selectedCharacter.plotItems" class="trait-item"
+                    style="margin-bottom: 12px; list-style-type: none; margin-left: -20px;">
+                    <div [innerHTML]="item" style="color: var(--font-white); opacity: 0.9; line-height: 1.5;"></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- COMPOSE/EDIT MODE -->
+    <div class="entity-details form-mode" *ngIf="selectedCharacter && isEditing">
+        <div class="detail-header" style="justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">
+            <h2 style="font-size: 24px; color: var(--link-gold); margin: 0;">{{ selectedCharacter._id ? 'Editar Personaje' : 'Nuevo Personaje' }}</h2>
+            <div class="actions">
+                <button mat-button (click)="cancelEdit()">Cancelar</button>
+                <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">Guardar</button>
+            </div>
+        </div>
+
+        <div class="image-upload-section" style="display: flex; justify-content: center; margin-bottom: 32px;">
+            <div class="image-preview" (click)="fileInput.click()" style="width: 150px; height: 150px; border-radius: 50%; border: 2px dashed var(--link-gold); overflow: hidden; cursor: pointer; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;">
+                <div *ngIf="!imagePreview" class="placeholder" style="display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.5);">
+                    <mat-icon style="font-size: 32px; width: 32px; height: 32px; margin-bottom: 8px;">add_photo_alternate</mat-icon>
+                    <span>Subir Imagen</span>
+                </div>
+            </div>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden>
+        </div>
+
+        <form [formGroup]="form" class="character-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; gap: 16px;">
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Nombre del Personaje</mat-label>
+                    <input matInput formControlName="characterName" placeholder="Ej: Grog">
+                    <mat-error *ngIf="form.get('characterName')?.hasError('required')">El nombre es obligatorio</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Nombre del Jugador</mat-label>
+                    <input matInput formControlName="playerName" placeholder="Ej: Tuno">
+                    <mat-error *ngIf="form.get('playerName')?.hasError('required')">El nombre del jugador es obligatorio</mat-error>
+                </mat-form-field>
+            </div>
+
+            <div style="display: flex; gap: 16px;">
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Raza / Subraza</mat-label>
+                    <mat-select formControlName="subraceId">
+                        <mat-option *ngFor="let s of subraces" [value]="s._id">{{ s.name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Lugar Actual</mat-label>
+                    <mat-select formControlName="currentPlaceId">
+                        <mat-option *ngFor="let p of places" [value]="p._id">{{ p.name }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Deidades</mat-label>
+                <mat-select formControlName="deitiesIds" multiple>
+                    <mat-option *ngFor="let g of gods" [value]="g._id">{{ g.name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Trasfondo en Creación</mat-label>
+                <textarea matInput formControlName="backstory" rows="4" placeholder="Historia del personaje..."></textarea>
+            </mat-form-field>
+
+            <!-- Eventos y Logros -->
+            <div class="list-section" formArrayName="eventsAndAchievements" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; color: var(--link-gold); font-size: 16px;">Actualización de Eventos y Logros</h3>
+                    <button mat-stroked-button type="button" (click)="addEvent()">
+                        <mat-icon>add</mat-icon> Añadir
+                    </button>
+                </div>
+                
+                <div *ngFor="let eventCtrl of eventsAndAchievements.controls; let i=index" class="list-row" style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+                    <mat-form-field appearance="outline" style="flex: 1; margin: 0;">
+                        <mat-label>Evento/Logro {{ i + 1 }} (Usa &lt;b&gt; para negritas)</mat-label>
+                        <textarea matInput [formControlName]="i" rows="2"></textarea>
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" type="button" (click)="removeEvent(i)" style="margin-top: 8px; flex-shrink: 0;">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Objetos de Trama -->
+            <div class="list-section" formArrayName="plotItems" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; color: var(--link-gold); font-size: 16px;">Objetos de Trama</h3>
+                    <button mat-stroked-button type="button" (click)="addPlotItem()">
+                        <mat-icon>add</mat-icon> Añadir
+                    </button>
+                </div>
+                
+                <div *ngFor="let itemCtrl of plotItems.controls; let i=index" class="list-row" style="display: flex; align-items: flex-start; gap: 8px; margin-bottom: 8px;">
+                    <mat-form-field appearance="outline" style="flex: 1; margin: 0;">
+                        <mat-label>Objeto {{ i + 1 }} (Usa &lt;b&gt; para negritas)</mat-label>
+                        <textarea matInput [formControlName]="i" rows="2"></textarea>
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" type="button" (click)="removePlotItem(i)" style="margin-top: 8px; flex-shrink: 0;">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="empty-state" *ngIf="!selectedCharacter && characters.length > 0">
+        Selecciona un personaje para ver sus detalles o haz clic en "Añadir Personaje".
+    </div>
+
+</div>

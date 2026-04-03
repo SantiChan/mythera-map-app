@@ -1,0 +1,96 @@
+<div class="wiki-characters-container">
+    <div class="page-header">
+        <h2>Eventos Históricos</h2>
+    </div>
+
+    <div class="entities-grid">
+        <div class="entity-card add" (click)="addNew()">
+            <div class="plus">+</div>
+            <div>Añadir Evento</div>
+        </div>
+
+        <div class="entity-card" *ngFor="let event of events" (click)="selectEvent(event)" [class.active]="selectedEvent?._id === event._id">
+            <div class="image-wrapper">
+                <img *ngIf="event.imageUrl" [src]="event.imageUrl" [alt]="event.name" style="width: 100%; height: 100%; object-fit: cover;">
+                <div *ngIf="!event.imageUrl" class="no-image">
+                    <mat-icon>history_edu</mat-icon>
+                </div>
+            </div>
+            <div class="entity-name">{{ event.name }}</div>
+        </div>
+    </div>
+
+    <!-- READ MODE -->
+    <div class="entity-details" *ngIf="selectedEvent && !isEditing">
+        <div class="detail-header" style="align-items: flex-start;">
+            <div style="display: flex; gap: 24px; align-items: flex-start; flex: 1;">
+                <div *ngIf="selectedEvent.imageUrl" style="flex-shrink: 0;">
+                    <img [src]="selectedEvent.imageUrl" [alt]="selectedEvent.name" 
+                         style="width: 160px; height: 160px; object-fit: cover; border-radius: 12px; border: 2px solid var(--link-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                </div>
+                <div *ngIf="!selectedEvent.imageUrl" style="flex-shrink: 0; width: 160px; height: 160px; border-radius: 12px; border: 2px dashed rgba(200, 170, 110, 0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); text-align: center; padding: 16px; box-sizing: border-box;">
+                    <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: rgba(255,255,255,0.2); margin-bottom: 12px;">history_edu</mat-icon>
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.4);">Sin representación</span>
+                </div>
+                
+                <div style="padding-top: 8px;">
+                    <h2 style="font-size: 32px; margin-bottom: 4px; color: var(--link-gold);">{{ selectedEvent.name }}</h2>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button mat-icon-button color="primary" (click)="editEvent()" matTooltip="Editar">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteEvent(selectedEvent)" matTooltip="Eliminar del archivo">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedEvent.descriptionHtml">
+            <div [innerHTML]="selectedEvent.descriptionHtml" style="color: var(--font-white); line-height: 1.6;"></div>
+        </div>
+    </div>
+
+    <!-- EDIT MODE -->
+    <div class="entity-details form-mode" *ngIf="selectedEvent && isEditing">
+        <div class="detail-header" style="justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">
+            <h2 style="font-size: 24px; color: var(--link-gold); margin: 0;">{{ selectedEvent._id ? 'Editar Evento Histórico' : 'Nuevo Evento Histórico' }}</h2>
+            <div class="actions">
+                <button mat-button (click)="cancelEdit()">Cancelar</button>
+                <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">Guardar Transcripción</button>
+            </div>
+        </div>
+
+        <div class="image-upload-section" style="display: flex; justify-content: center; margin-bottom: 32px;">
+            <div class="image-preview" (click)="fileInput.click()" style="width: 150px; height: 150px; border-radius: 50%; border: 2px dashed var(--link-gold); overflow: hidden; cursor: pointer; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;">
+                <div *ngIf="!imagePreview" class="placeholder" style="display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.5); text-align: center; padding: 0 12px; box-sizing: border-box;">
+                    <mat-icon style="font-size: 32px; width: 32px; height: 32px; margin-bottom: 8px;">add_photo_alternate</mat-icon>
+                    <span style="font-size: 13px; line-height: 1.2;">Subir Imagen</span>
+                </div>
+            </div>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden>
+        </div>
+
+        <form [formGroup]="form" class="character-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Título del Evento</mat-label>
+                <input matInput formControlName="name">
+                <mat-error *ngIf="form.get('name')?.hasError('required')">El título del evento es obligatorio</mat-error>
+            </mat-form-field>
+
+            <div style="margin-bottom: 24px;">
+               <label style="color: rgba(255,255,255,0.7); display: block; margin-bottom: 8px; font-size: 14px;">Anales (Descripción Rich Text)</label>
+               <div class="editor-container dark-editor-override">
+                 <angular-editor formControlName="descriptionHtml" [config]="editorConfig"></angular-editor>
+               </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="empty-state" *ngIf="!selectedEvent && events.length > 0">
+        Selecciona un evento histórico para explorar los registros o agrega el tuyo.
+    </div>
+</div>

@@ -1,0 +1,167 @@
+.wiki-eternals-container {
+    padding: 0 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+
+    .page-header {
+        margin-bottom: 32px;
+
+        h2 {
+            margin: 0;
+            color: var(--link-gold);
+            font-size: 84px;
+            font-family: 'Osgard';
+            text-transform: capitalize;
+        }
+    }
+}
+
+.entities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+}
+
+.entity-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    user-select: none;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-2px);
+    }
+
+    &.active {
+        background: rgba(200, 170, 110, 0.1);
+
+        .image-wrapper {
+            border-color: var(--link-gold);
+            box-shadow: 0 0 15px rgba(200, 170, 110, 0.5);
+        }
+    }
+
+    .image-wrapper {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-bottom: 12px;
+        border: 2px solid transparent;
+        transition: all 0.2s ease;
+        background: rgba(0, 0, 0, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .no-image {
+            mat-icon {
+                font-size: 64px;
+                width: 64px;
+                height: 64px;
+                opacity: 0.5;
+                color: var(--font-white);
+            }
+        }
+    }
+
+    .entity-name {
+        text-align: center;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--font-white);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+}
+
+.entity-card.add {
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    justify-content: center;
+    min-height: 160px;
+    color: rgba(255, 255, 255, 0.5);
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.5);
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .plus {
+        font-size: 48px;
+        font-weight: 300;
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+}
+
+.entity-details {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    padding: 32px;
+    border-top: 4px solid var(--link-gold);
+
+    .detail-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 24px;
+        gap: 16px;
+
+        h2 {
+            margin: 0;
+            color: var(--link-gold);
+            font-size: 28px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+    }
+
+    .detail-section {
+        margin-bottom: 24px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 24px;
+
+        &:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        h3 {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.5);
+            margin: 0 0 12px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        p {
+            margin: 0;
+            color: var(--font-white);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+    }
+}
+
+.empty-state {
+    text-align: center;
+    padding: 48px;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}

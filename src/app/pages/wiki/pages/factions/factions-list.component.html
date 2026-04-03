@@ -1,0 +1,258 @@
+<div class="wiki-characters-container">
+    <div class="page-header">
+        <h2>Organizaciones</h2>
+    </div>
+
+    <div class="entities-grid">
+        <div class="entity-card add" (click)="addNew()">
+            <div class="plus">+</div>
+            <div>Añadir Organización</div>
+        </div>
+
+        <div class="entity-card" *ngFor="let faction of factions" (click)="selectFaction(faction)"
+            [class.active]="selectedFaction?._id === faction._id">
+            <div class="image-wrapper">
+                <img *ngIf="faction.imageUrl" [src]="faction.imageUrl" [alt]="faction.name">
+                <div *ngIf="!faction.imageUrl" class="no-image">
+                    <mat-icon>shield</mat-icon>
+                </div>
+            </div>
+            <div class="entity-name">{{ faction.name }}</div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 4px;">{{ faction.type || 'Faccion' }}</div>
+        </div>
+    </div>
+
+    <!-- READ MODE -->
+    <div class="entity-details" *ngIf="selectedFaction && !isEditing">
+        <div class="detail-header" style="align-items: flex-start;">
+            <div style="display: flex; gap: 24px; align-items: flex-start; flex: 1;">
+                
+                <div *ngIf="selectedFaction.imageUrl" style="flex-shrink: 0;">
+                    <img [src]="selectedFaction.imageUrl" [alt]="selectedFaction.name" 
+                         style="width: 160px; height: 160px; object-fit: cover; border-radius: 12px; border: 2px solid var(--link-gold); box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+                </div>
+                
+                <div *ngIf="!selectedFaction.imageUrl" style="flex-shrink: 0; width: 160px; height: 160px; border-radius: 12px; border: 2px dashed rgba(200, 170, 110, 0.5); display: flex; flex-direction: column; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); text-align: center; padding: 16px; box-sizing: border-box;">
+                    <mat-icon style="font-size: 48px; width: 48px; height: 48px; color: rgba(255,255,255,0.2); margin-bottom: 12px;">shield</mat-icon>
+                    <span style="font-size: 12px; color: rgba(255,255,255,0.4);">Aún sin imagen</span>
+                </div>
+
+                <div style="padding-top: 8px;">
+                    <h2 style="font-size: 32px; margin-bottom: 4px; color: var(--link-gold);">{{ selectedFaction.name }}</h2>
+                    <div style="color: rgba(255,255,255,0.6); margin-top: 8px; font-size: 15px; line-height: 1.8;">
+                        Tipo: <strong style="color: var(--link-gold)">{{ selectedFaction.type || 'Desconocido' }}</strong><br>
+                    </div>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button mat-icon-button color="primary" (click)="editFaction()" matTooltip="Editar">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deleteFaction(selectedFaction)" matTooltip="Eliminar">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedFaction.descriptionHtml">
+            <h3>Descripción</h3>
+            <div [innerHTML]="selectedFaction.descriptionHtml" style="color: var(--font-white); line-height: 1.6;"></div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedFaction.placesIds?.length">
+            <h3>Lugares Relacionados</h3>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <span *ngFor="let place of selectedFaction.placesIds" 
+                      style="background: rgba(200, 170, 110, 0.2); border: 1px solid var(--link-gold); padding: 4px 12px; border-radius: 16px; font-size: 13px; color: var(--link-gold);">
+                    {{ place.name }}
+                </span>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedFaction.npcIds?.length">
+            <h3>PNJs Importantes</h3>
+            <div class="npcs-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 12px;">
+                <div *ngFor="let npc of selectedFaction.npcIds" 
+                     (click)="openNpcDetails(npc)"
+                     style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: all 0.2s;">
+                    <div class="npc-img-wrapper" style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+                        <img *ngIf="npc.imageUrl" [src]="npc.imageUrl" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--link-gold);">
+                        <div *ngIf="!npc.imageUrl" style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+                            <mat-icon style="color: rgba(255,255,255,0.3);">person</mat-icon>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600; color: var(--font-white); font-size: 14px;">{{ npc.name }}</div>
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.5);" *ngIf="npc.title">{{ npc.title }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedFaction.ranks?.length">
+            <h3>Rangos</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div *ngFor="let rank of selectedFaction.ranks" style="background: rgba(0,0,0,0.2); border-left: 3px solid var(--link-gold); padding: 12px 16px;">
+                    <strong style="color: var(--link-gold); display: block; margin-bottom: 4px; font-size: 15px;">{{ rank.title }}</strong>
+                    <span style="color: rgba(255,255,255,0.8); font-size: 14px;">{{ rank.description }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedFaction.factionTraits?.length">
+            <h3>Rasgos de Facción</h3>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <div *ngFor="let trait of selectedFaction.factionTraits" style="background: rgba(0,0,0,0.2); border-left: 3px solid #8d6e3c; padding: 12px 16px;">
+                    <strong style="color: #8d6e3c; display: block; margin-bottom: 4px; font-size: 15px;">{{ trait.title }}</strong>
+                    <span style="color: rgba(255,255,255,0.8); font-size: 14px;">{{ trait.description }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section" *ngIf="selectedFaction.troops?.length">
+            <h3>Peanas (Tropas)</h3>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <div *ngFor="let troop of selectedFaction.troops" style="background: rgba(0,0,0,0.4); padding: 8px 16px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; gap: 16px; align-items: center;">
+                    <span style="color: var(--font-white);">{{ troop.name }}</span>
+                    <span style="color: var(--link-gold); font-weight: bold; background: rgba(200, 170, 110, 0.2); padding: 2px 8px; border-radius: 12px;">x{{ troop.quantity }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT MODE -->
+    <div class="entity-details form-mode" *ngIf="selectedFaction && isEditing">
+        <div class="detail-header" style="justify-content: space-between; align-items: center; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;">
+            <h2 style="font-size: 24px; color: var(--link-gold); margin: 0;">{{ selectedFaction._id ? 'Editar Organización' : 'Nueva Organización' }}</h2>
+            <div class="actions">
+                <button mat-button (click)="cancelEdit()">Cancelar</button>
+                <button mat-raised-button color="primary" [disabled]="form.invalid" (click)="save()">Guardar</button>
+            </div>
+        </div>
+
+        <div class="image-upload-section" style="display: flex; justify-content: center; margin-bottom: 32px;">
+            <div class="image-preview" (click)="fileInput.click()" style="width: 150px; height: 150px; border-radius: 50%; border: 2px dashed var(--link-gold); overflow: hidden; cursor: pointer; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.2); transition: all 0.3s ease;">
+                <img *ngIf="imagePreview" [src]="imagePreview" alt="Vista previa" style="width: 100%; height: 100%; object-fit: cover;">
+                <div *ngIf="!imagePreview" class="placeholder" style="display: flex; flex-direction: column; align-items: center; color: rgba(255,255,255,0.5); text-align: center; padding: 0 12px; box-sizing: border-box;">
+                    <mat-icon style="font-size: 32px; width: 32px; height: 32px; margin-bottom: 8px;">add_photo_alternate</mat-icon>
+                    <span style="font-size: 13px; line-height: 1.2;">Subir Escudo /<br>Imagen</span>
+                </div>
+            </div>
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" hidden>
+        </div>
+
+        <form [formGroup]="form" class="character-form" style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: flex; gap: 16px;">
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Nombre de la Organización</mat-label>
+                    <input matInput formControlName="name" placeholder="Ej: La Mano Negra">
+                    <mat-error *ngIf="form.get('name')?.hasError('required')">El nombre es obligatorio</mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="flex: 1;">
+                    <mat-label>Tipo</mat-label>
+                    <input matInput formControlName="type" placeholder="Ej: Gremio, Reino, Culto...">
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Lugares Vinculados</mat-label>
+                <mat-select formControlName="placesIds" multiple>
+                    <mat-option *ngFor="let p of places" [value]="p._id">{{ p.name }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 16px;">
+                <mat-form-field appearance="outline" style="flex: 1; margin: 0;" subscriptSizing="dynamic">
+                    <mat-label>Personajes Importantes (PNJs)</mat-label>
+                    <mat-select formControlName="npcIds" multiple>
+                        <mat-option *ngFor="let npc of npcs" [value]="npc._id">{{ npc.name }} {{ npc.title ? '(' + npc.title + ')' : '' }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <button mat-flat-button type="button" (click)="openCreateNpcModal()" matTooltip="Crear nuevo PNJ" style="background-color: var(--link-gold); color: #1a1a1a; min-width: 56px; height: 56px; padding: 0; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+                    <mat-icon style="margin: 0;">add</mat-icon>
+                </button>
+            </div>
+
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Descripción (Admite HTML)</mat-label>
+                <textarea matInput formControlName="descriptionHtml" rows="6" placeholder="Historia, propósito, métodos..."></textarea>
+            </mat-form-field>
+
+            <!-- Rangos -->
+            <div class="list-section" formArrayName="ranks" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; color: var(--link-gold); font-size: 16px;">Rangos Relevantes</h3>
+                    <button mat-stroked-button type="button" (click)="addRank()"><mat-icon>add</mat-icon> Añadir Rango</button>
+                </div>
+                
+                <div *ngFor="let ctrl of ranks.controls; let i=index" [formGroupName]="i" class="list-row complex-row" style="background: rgba(0,0,0,0.1); padding: 12px; border-radius: 8px; border-left: 2px solid var(--link-gold); margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                        <mat-form-field appearance="outline" style="width: 100%; margin: 0;">
+                            <mat-label>Título del Rango</mat-label>
+                            <input matInput formControlName="title" placeholder="Ej: Gran Maestre">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100%; margin: 0;">
+                            <mat-label>Descripción</mat-label>
+                            <textarea matInput formControlName="description" rows="2"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <button mat-icon-button color="warn" type="button" (click)="removeRank(i)" style="margin-top: 8px;">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Rasgos de Facción -->
+            <div class="list-section" formArrayName="factionTraits" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; color: var(--link-gold); font-size: 16px;">Rasgos de Facción</h3>
+                    <button mat-stroked-button type="button" (click)="addTrait()"><mat-icon>add</mat-icon> Añadir Rasgo</button>
+                </div>
+                
+                <div *ngFor="let ctrl of factionTraits.controls; let i=index" [formGroupName]="i" class="list-row complex-row" style="background: rgba(0,0,0,0.1); padding: 12px; border-radius: 8px; border-left: 2px solid #8d6e3c; margin-bottom: 12px; display: flex; align-items: flex-start; gap: 8px;">
+                    <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                        <mat-form-field appearance="outline" style="width: 100%; margin: 0;">
+                            <mat-label>Nombre del Rasgo</mat-label>
+                            <input matInput formControlName="title" placeholder="Ej: Red de Espías">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100%; margin: 0;">
+                            <mat-label>Efectos / Descripción</mat-label>
+                            <textarea matInput formControlName="description" rows="2"></textarea>
+                        </mat-form-field>
+                    </div>
+                    <button mat-icon-button color="warn" type="button" (click)="removeTrait(i)" style="margin-top: 8px;">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tropas / Peanas -->
+            <div class="list-section" formArrayName="troops" style="margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px;">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="margin: 0; color: var(--link-gold); font-size: 16px;">Tropas Mantenidas (Peanas)</h3>
+                    <button mat-stroked-button type="button" (click)="addTroop()"><mat-icon>add</mat-icon> Añadir Tropa</button>
+                </div>
+                
+                <div *ngFor="let ctrl of troops.controls; let i=index" [formGroupName]="i" class="list-row" style="display: flex; align-items: baseline; gap: 8px; margin-bottom: 8px;">
+                    <mat-form-field appearance="outline" style="flex: 2; margin: 0;">
+                        <mat-label>Nombre de la Tropa</mat-label>
+                        <input matInput formControlName="name" placeholder="Ej: Infantería Pesada">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="flex: 1; margin: 0;">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput type="number" formControlName="quantity">
+                    </mat-form-field>
+                    <button mat-icon-button color="warn" type="button" (click)="removeTroop(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="empty-state" *ngIf="!selectedFaction && factions.length > 0">
+        Selecciona una organización para ver sus detalles o añade una nueva.
+    </div>
+</div>

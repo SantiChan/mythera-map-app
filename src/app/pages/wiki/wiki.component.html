@@ -8,7 +8,7 @@
     </div>
 
     <mat-nav-list>
-      
+
       <!-- Partidas -->
       <mat-expansion-panel>
         <mat-expansion-panel-header>
@@ -54,37 +54,14 @@
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-icon>groups</mat-icon>
-            <span>Razas</span>
+            <span routerLink="/wiki/razas" style="cursor: pointer; padding: 4px;">Razas</span>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <a mat-list-item routerLink="/wiki/humanos" routerLinkActive="active">
+          <a mat-list-item *ngFor="let race of races" [routerLink]="['/wiki/razas', race._id]"
+            routerLinkActive="active">
             <mat-icon>person</mat-icon>
-            <span>Humanos</span>
-          </a>
-          <a mat-list-item routerLink="/wiki/elfos" routerLinkActive="active">
-            <mat-icon>nature_people</mat-icon>
-            <span>Elfos</span>
-          </a>
-          <a mat-list-item routerLink="/wiki/enanos" routerLinkActive="active">
-            <mat-icon>engineering</mat-icon>
-            <span>Enanos</span>
-          </a>
-          <a mat-list-item routerLink="/wiki/gnomos" routerLinkActive="active">
-            <mat-icon>psychology</mat-icon>
-            <span>Gnomos</span>
-          </a>
-          <a mat-list-item routerLink="/wiki/medianos" routerLinkActive="active">
-            <mat-icon>child_care</mat-icon>
-            <span>Medianos</span>
-          </a>
-          <a mat-list-item routerLink="/wiki/orcos" routerLinkActive="active">
-            <mat-icon>fitness_center</mat-icon>
-            <span>Orcos</span>
-          </a>
-          <a mat-list-item routerLink="/wiki/razas-unicas" routerLinkActive="active">
-            <mat-icon>diamond</mat-icon>
-            <span>Razas Únicas</span>
+            <span>{{ race.name }}</span>
           </a>
         </mat-nav-list>
       </mat-expansion-panel>

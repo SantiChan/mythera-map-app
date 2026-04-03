@@ -133,7 +133,7 @@ export class PlaceService {
         if (npcData.title) formData.append('title', npcData.title);
         if (npcData.descriptionHtml) formData.append('descriptionHtml', npcData.descriptionHtml);
         if (npcData.personality) formData.append('personality', npcData.personality);
-        if (npcData.image) formData.append('image', npcData.image);
+        if (npcData.imageUrl) formData.append('imageUrl', npcData.imageUrl);
         if (file) formData.append('file', file);
 
         return this._apiService.patch(`${API_CALLS.place}/${placeId}/npcs`, formData);
@@ -147,7 +147,7 @@ export class PlaceService {
         if (npcData.title) formData.append('title', npcData.title);
         if (npcData.descriptionHtml) formData.append('descriptionHtml', npcData.descriptionHtml);
         if (npcData.personality) formData.append('personality', npcData.personality);
-        if (npcData.image) formData.append('image', npcData.image);
+        if (npcData.imageUrl) formData.append('imageUrl', npcData.imageUrl);
         if (file) formData.append('file', file);
 
         return this._apiService.patch(`${API_CALLS.place}/${placeId}/npcs/${npcId}`, formData);

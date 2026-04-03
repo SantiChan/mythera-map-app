@@ -2,8 +2,13 @@
   <!-- View Mode -->
   <div *ngIf="!editMode" class="npc-modal__content">
     <div class="image-preview">
-      <img [src]="data.npc.image" alt="npc" class="preview-img" />
+      <img *ngIf="data.npc.imageUrl" [src]="data.npc.imageUrl" alt="npc" class="preview-img" />
       
+      <div *ngIf="!data.npc.imageUrl" class="no-image-placeholder">
+        <mat-icon>person</mat-icon>
+        <p>Sin imagen</p>
+      </div>
+
       <button mat-icon-button class="icon-btn close-btn" (click)="close()">
         <mat-icon>close</mat-icon>
       </button>
@@ -28,12 +33,12 @@
   <!-- Edit Mode -->
   <div *ngIf="editMode" class="npc-modal__content">
     <div class="image-preview">
-      <img *ngIf="imagePreview || data.npc.image" 
-           [src]="imagePreview || data.npc.image" 
+      <img *ngIf="imagePreview || data.npc.imageUrl" 
+           [src]="imagePreview || data.npc.imageUrl" 
            alt="npc" 
            class="preview-img" />
       
-      <div *ngIf="!imagePreview && !data.npc.image" class="no-image-placeholder">
+      <div *ngIf="!imagePreview && !data.npc.imageUrl" class="no-image-placeholder">
         <mat-icon>person</mat-icon>
         <p>Sin imagen</p>
       </div>
@@ -45,11 +50,7 @@
       </button>
       
       <button mat-icon-button class="icon-btn edit-image-btn" (click)="fileInput.click()">
-        <mat-icon>{{ (imagePreview || data.npc.image) ? 'edit' : 'add_photo_alternate' }}</mat-icon>
-      </button>
-      
-      <button *ngIf="selectedFile" mat-icon-button class="icon-btn save-image-btn" (click)="confirmImageChange()">
-        <mat-icon>save</mat-icon>
+        <mat-icon>{{ (imagePreview || data.npc.imageUrl) ? 'edit' : 'add_photo_alternate' }}</mat-icon>
       </button>
     </div>
     

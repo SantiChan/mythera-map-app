@@ -1,0 +1,71 @@
+<div class="wiki-timeline-container">
+    <div class="header-actions">
+        <h2>Línea Temporal</h2>
+        <div class="actions-group">
+            <button mat-stroked-button color="primary" (click)="addEra()">
+                <mat-icon>add_circle_outline</mat-icon>
+                Añadir Era
+            </button>
+            <button mat-raised-button color="primary" (click)="addEvent()">
+                <mat-icon>add</mat-icon>
+                Añadir Evento
+            </button>
+        </div>
+    </div>
+
+    <div class="timeline-wrapper">
+        <div *ngFor="let era of eras" class="era-section">
+            <!-- Era Header -->
+            <div class="era-marker">
+                <div class="era-content">
+                    <h3>{{ era.name }}</h3>
+                    <div class="era-actions">
+                        <button mat-icon-button color="primary" (click)="editEra(era)" matTooltip="Editar Era">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" (click)="deleteEra(era._id)" matTooltip="Eliminar Era">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events for this Era -->
+            <div class="events-list">
+                <div *ngFor="let event of getEventsForEra(era._id); let i = index" class="timeline-item"
+                    [ngClass]="i % 2 === 0 ? 'right-side' : 'left-side'">
+
+                    <div class="timeline-year">
+                        Año {{ event.year }}
+                    </div>
+
+                    <div class="timeline-dot">
+                        <mat-icon>schedule</mat-icon>
+                    </div>
+
+                    <div class="timeline-card">
+                        <div class="card-header">
+                            <h4>{{ event.title }}</h4>
+                            <div class="card-actions">
+                                <button mat-icon-button (click)="editEvent(event)">
+                                    <mat-icon>edit</mat-icon>
+                                </button>
+                                <button mat-icon-button color="warn" (click)="deleteEvent(event._id)">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <p>{{ event.description }}</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="eras.length === 0" class="empty-message">
+            No hay eras definidas. Crea una era para poder añadir eventos a la línea temporal.
+        </div>
+    </div>
+</div>
