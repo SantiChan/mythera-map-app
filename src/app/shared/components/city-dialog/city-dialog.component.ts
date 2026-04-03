@@ -72,7 +72,8 @@ export class CityDialogComponent {
           y: placeData.y,
           name: placeData.name,
           iconSize: placeData.iconSize,
-          description: placeData.description
+          description: placeData.description,
+          id: response._id || response.id
         };
 
         this._markerService.setSaveMarker(marker);
@@ -99,10 +100,9 @@ export class CityDialogComponent {
             y: placeData.y!,
             iconSize: placeData.iconSize!,
             name: placeData.name!,
-            description: placeData.description!
+            description: placeData.description!,
+            id: this.data.placeData._id // include ID so map knows which to update
           });
-
-          this._markerService.reloadMarkers();
       
           this._snackbar.success('Actualizado correctamente');
           this.dialogRef.close();
@@ -125,7 +125,8 @@ export class CityDialogComponent {
           y: placeData.y!,
           iconSize: placeData.iconSize!,
           name: placeData.name!,
-          description: placeData.description!
+          description: placeData.description!,
+          id: this.data.placeData._id // include ID so map knows which to update
         });
         this._snackbar.success('Actualizado correctamente');
         this.dialogRef.close(resp);
@@ -192,6 +193,7 @@ export class CityDialogComponent {
 
     this._placeService.deletePlace(this.data.placeData._id).subscribe({
       next: (resp) => {
+        this._markerService.removeMarker(this.data.placeData._id);
         this._snackbar.success('Eliminado correctamente');
         this.dialogRef.close(resp);
       },

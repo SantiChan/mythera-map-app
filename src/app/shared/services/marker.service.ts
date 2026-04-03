@@ -4,16 +4,18 @@ import { MarkerIconInterface } from '../interfaces/icons/marker-icon.interface';
 import { CreatePlacesDTO } from '../interfaces/places/places.interface';
 
 @Injectable({
-  providedIn: 'root' 
+  providedIn: 'root'
 })
 export class MarkerService {
   private selectedMarkerSubject = new BehaviorSubject<MarkerIconInterface | null>(null);
   private saveMarkerSubject = new BehaviorSubject<CreatePlacesDTO | null>(null);
   private reloadMarkersSubject = new Subject<boolean>();
+  private removeMarkerSubject = new Subject<string>();
 
-  selectedMarker$ = this.selectedMarkerSubject.asObservable(); 
+  selectedMarker$ = this.selectedMarkerSubject.asObservable();
   saveMarker$ = this.saveMarkerSubject.asObservable();
   reloadMarkers$ = this.reloadMarkersSubject.asObservable();
+  removeMarker$ = this.removeMarkerSubject.asObservable();
 
   setSelectedMarker(marker: MarkerIconInterface) {
     this.selectedMarkerSubject.next(marker);
@@ -32,7 +34,10 @@ export class MarkerService {
   }
 
   reloadMarkers() {
-    console.log("service reload")
     this.reloadMarkersSubject.next(true);
+  }
+
+  removeMarker(id: string) {
+    this.removeMarkerSubject.next(id);
   }
 }

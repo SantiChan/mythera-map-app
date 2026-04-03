@@ -1,4 +1,5 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, DestroyRef, inject, NgZone } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import * as L from 'leaflet';
 import { PlaceService } from '../../shared/services/places.service';
 import { CityDialogComponent } from '../../shared/components/city-dialog/city-dialog.component';
@@ -33,6 +34,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     private _cityLayer = L.layerGroup();
     private _placeLayer = L.layerGroup();
 
+    private _renderedMarkers = new Map<string, L.Marker>();
+    private destroyRef = inject(DestroyRef);
+    private ngZone = inject(NgZone);
+
     constructor(
         private _dialog: MatDialog,
         private _placesService: PlaceService,
@@ -43,58 +48,73 @@ export class MapComponent implements AfterViewInit, OnInit {
 
 
     ngOnInit(): void {
-        this._markerService.selectedMarker$.subscribe(marker => {
+        this._markerService.selectedMarker$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(marker => {
             if (marker) {
                 this._startPlacementMode(marker)
             };
         });
 
-        this._markerService.reloadMarkers$.subscribe(refresh => {
+        this._markerService.reloadMarkers$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(refresh => {
             console.log("REFRESH", refresh)
             if (refresh) {
                 this._refreshAllMarkers();
             };
         });
 
-        this._markerService.saveMarker$.subscribe(marker => {
-            if (marker) this._addMarkerToMap(marker);
+        this._markerService.saveMarker$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(marker => {
+            if (marker) {
+                if (marker.id && this._renderedMarkers.has(marker.id)) {
+                    this._renderedMarkers.get(marker.id)!.remove();
+                    this._renderedMarkers.delete(marker.id);
+                }
+                this._addMarkerToMap(marker);
+            }
+        });
+
+        this._markerService.removeMarker$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(id => {
+            if (id && this._renderedMarkers.has(id)) {
+                this._renderedMarkers.get(id)!.remove();
+                this._renderedMarkers.delete(id);
+            }
         });
     }
 
     ngAfterViewInit(): void {
-        const bounds: L.LatLngBoundsExpression = [[0, 0], [this._imageHeight, this._imageWidth]];
+        this.ngZone.runOutsideAngular(() => {
+            const bounds: L.LatLngBoundsExpression = [[0, 0], [this._imageHeight, this._imageWidth]];
 
-        this._map = L.map('map', {
-            crs: L.CRS.Simple,
-            minZoom: -5,
-            maxZoom: 3.5,
-            zoomSnap: 0.1,
-            zoomDelta: 0.5,
-        });
-
-        const imageUrl = 'assets/imgs/map/mythera-map-new.png';
-        L.imageOverlay(imageUrl, bounds).addTo(this._map);
-
-        setTimeout(() => {
-            this._map.fitBounds(bounds, { animate: false });
-
-            const minZoom = this._map.getBoundsZoom(bounds, true);
-            this._map.setMinZoom(minZoom);
-            this._map.setMaxBounds(bounds);
-            this._map.panInsideBounds(bounds, { animate: false });
-
-            this._placesService.getPlaces().subscribe({
-                next: (places) => {
-                    places.forEach((place: CreatePlacesDTO) => this._addMarkerToMap(place));
-                    this._updateVisibleLayers();
-                },
-                error: (error) => {
-                    console.error('Error al obtener los lugares', error);
-                }
+            this._map = L.map('map', {
+                crs: L.CRS.Simple,
+                minZoom: -5,
+                maxZoom: 3.5,
+                zoomSnap: 0.1,
+                zoomDelta: 0.5,
             });
-        }, 50);
 
-        this._addPlacesByzoom();
+            const imageUrl = 'assets/imgs/map/mythera-map-optimized.png';
+            L.imageOverlay(imageUrl, bounds).addTo(this._map);
+
+            setTimeout(() => {
+                this._map.fitBounds(bounds, { animate: false });
+
+                const minZoom = this._map.getBoundsZoom(bounds, true);
+                this._map.setMinZoom(minZoom);
+                this._map.setMaxBounds(bounds);
+                this._map.panInsideBounds(bounds, { animate: false });
+
+                this._placesService.getPlaces().subscribe({
+                    next: (places) => {
+                        places.forEach((place: CreatePlacesDTO) => this._addMarkerToMap(place));
+                        this._updateVisibleLayers();
+                    },
+                    error: (error) => {
+                        console.error('Error al obtener los lugares', error);
+                    }
+                });
+            }, 50);
+
+            this._addPlacesByzoom();
+        });
     }
 
     private _addPlacesByzoom() {
@@ -167,12 +187,18 @@ export class MapComponent implements AfterViewInit, OnInit {
 
         const openDialog = (e: MouseEvent) => {
             e.stopPropagation();
-            this._dialog.open(CityDialogComponent, {
-                data: { placeData: place, viewMode: true }
+            this.ngZone.run(() => {
+                this._dialog.open(CityDialogComponent, {
+                    data: { placeData: place, viewMode: true }
+                });
             });
         };
 
         markerHTML.addEventListener('click', openDialog);
+
+        if (place.id) {
+            this._renderedMarkers.set(place.id, marker);
+        }
     }
 
 
@@ -218,12 +244,13 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
 
     private _refreshAllMarkers(): void {
-        this._placesService.getPlaces().subscribe({
+        this._placesService.getPlaces().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (places) => {
                 this._continentLayer.clearLayers();
                 this._regionLayer.clearLayers();
                 this._cityLayer.clearLayers();
                 this._placeLayer.clearLayers();
+                this._renderedMarkers.clear();
 
                 places.forEach((p: CreatePlacesDTO) => this._addMarkerToMap(p));
 
